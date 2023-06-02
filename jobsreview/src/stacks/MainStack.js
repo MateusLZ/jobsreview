@@ -5,6 +5,7 @@ import Login from "../screens/Login";
 import RegisterUser from "../screens/RegisterUser";
 import Home from "../screens/Home";
 import MainTab from "../stacks/MainTab";
+import Vaga from "../screens/Vaga";
 import { Context } from "../context/dataContext";
 
 const Stack = createStackNavigator();
@@ -32,6 +33,7 @@ const MainStack = () => {
           <Stack.Screen name="RegisterUser" component={RegisterUser} />
         </>
       )}
+      <Stack.Screen name="Vaga" component={Vaga} />
     </Stack.Navigator>
   );
 };

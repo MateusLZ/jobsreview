@@ -20,7 +20,7 @@ const Vaga = connection.define("vaga", {
     type: Sequelize.STRING,
     allowNull: true,
   },
-  adress: {
+  address: {
     type: Sequelize.STRING,
     allowNull: false,
   },

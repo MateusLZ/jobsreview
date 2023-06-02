@@ -1,9 +1,11 @@
 import { Platform, RefreshControl } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import DeviceInfo from "react-native-device-info";
 import { request, PERMISSIONS } from "react-native-permissions";
 import Geolocation from "@react-native-community/geolocation";
+import Geocoder from "react-native-geocoding";
 import VagasItem from "../../components/VagasItem.js";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   Container,
@@ -18,7 +20,6 @@ import {
   ListArea,
 } from "./styles";
 import { AntDesign, Entypo } from "@expo/vector-icons";
-
 import api from "../../api";
 
 const TimeLine = ({ navigation }) => {
@@ -26,6 +27,10 @@ const TimeLine = ({ navigation }) => {
   const [coords, setCoords] = useState(null);
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  Geocoder.init("AIzaSyAyzbZ2Tphtadc13gq6MhBISoxXNXzR1_c");
+
   const handleLocationfinder = async () => {
     setCoords(null);
     let result = await request(
@@ -40,7 +45,33 @@ const TimeLine = ({ navigation }) => {
       Geolocation.getCurrentPosition((info) => {
         setCoords(info.coords);
         getVagas();
-        console.log(info);
+        let lat = null;
+        let lng = null;
+        if (info) {
+          lat = info.coords.latitude;
+          lng = info.coords.longitude;
+        }
+        Geocoder.from(lat, lng)
+          .then((response) => {
+            const results = response.results;
+            if (results.length > 0) {
+              for (let i = 0; i < results.length; i++) {
+                const addressComponents = results[i].address_components;
+                for (let j = 0; j < addressComponents.length; j++) {
+                  const types = addressComponents[j].types;
+                  if (types.includes("locality")) {
+                    const city = addressComponents[j].long_name;
+                    AsyncStorage.setItem("location", city);
+                    setLocationText(city);
+                    return;
+                  }
+                }
+              }
+            }
+          })
+          .catch((error) => {
+            console.error("Erro ao obter o endereço:", error);
+          });
       });
     }
   };
@@ -50,10 +81,11 @@ const TimeLine = ({ navigation }) => {
 
     try {
       const res = await api.get("/vagas");
+      const location = await AsyncStorage.getItem("location");
 
       if (res.error != "undefined") {
-        if (res.loc) {
-          setLocationText(res.loc);
+        if (location) {
+          setLocationText(location);
         }
         setList(res.data);
       } else {
@@ -70,11 +102,20 @@ const TimeLine = ({ navigation }) => {
     getVagas();
   }, []);
 
+  const onRefresh = () => {
+    setRefreshing(false);
+    getVagas();
+  };
+
   return (
     <Container>
-      <Scroller>
+      <Scroller
+        RefreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <HeaderArea>
-          <HeaderTitle numberOfLines={2}>Encontre a sua vaga</HeaderTitle>
+          <HeaderTitle numberOfLines={2}>Encontre a sua vaga </HeaderTitle>
           <SearchButton onPress={() => navigation.navigate("Pesquisa")}>
             <AntDesign name="search1" size={24} color="#FFFFFF" />
           </SearchButton>
@@ -87,7 +128,6 @@ const TimeLine = ({ navigation }) => {
             value={locationText}
             onChangeText={(t) => setLocationText(t)}
           />
-          {console.log(locationText)}
           <LocationFinder onPress={handleLocationfinder}>
             <Entypo name="location-pin" size={24} color="black" />
           </LocationFinder>

@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Context } from "../context/dataContext";
+import api from "../api";
+import { FlatList } from "react-native";
 
 const Area = styled.TouchableOpacity`
   background-color: #ffffff;
@@ -49,20 +54,61 @@ const Tipo = styled.Text`
 `;
 
 export default ({ data }) => {
+  const { state, dispatch } = useContext(Context);
+  const navigation = useNavigation();
+  const [vagas, setVaga] = useState([]);
+
+  useEffect(() => {
+    const onScreenLoad = async () => {
+      const list = await api.get("/vaga/find");
+      setVaga(list.data.Vagas);
+      dispatch({ type: "update", payload: false });
+    };
+    onScreenLoad();
+  }, [state.update]);
+
+  // const handleClick = () => {
+  //   navigation.navigate("Vaga", {
+  //     id: data.id,
+  //     nome: data.name,
+  //     endereco: data.address,
+  //     descricao: data.description,
+  //     tipo: data.type,
+  //   });
+  // };
+  const viewVaga = async (item) => {
+    await dispatch({ type: "setVaga", payload: item });
+    navigation.navigate("Vaga", {
+      id: item.id,
+      nome: item.name,
+      endereco: item.address,
+      descricao: item.description,
+      tipo: item.type,
+    });
+  };
+
   return (
-    <Area>
-      <Icon>
-        <AntDesign name="iconfontdesktop" size={50} color="black" />
-      </Icon>
-      <InfoArea>
-        <UserName>{data.name}</UserName>
+    <FlatList
+      data={vagas}
+      renderItem={({ item }) => {
+        return (
+          <Area onPress={() => viewVaga(item)}>
+            <Icon>
+              <AntDesign name="iconfontdesktop" size={50} color="black" />
+            </Icon>
+            <InfoArea>
+              <UserName>{item.name}</UserName>
 
-        <Tipo>{data.type}</Tipo>
+              <Tipo>{item.type}</Tipo>
 
-        <VerPerfilBotao>
-          <VerPerfilBotaoText>Ver Perfil</VerPerfilBotaoText>
-        </VerPerfilBotao>
-      </InfoArea>
-    </Area>
+              <VerPerfilBotao>
+                <VerPerfilBotaoText>Ver Perfil</VerPerfilBotaoText>
+              </VerPerfilBotao>
+            </InfoArea>
+          </Area>
+        );
+      }}
+      keyExtractor={(item) => item.id}
+    />
   );
 };
