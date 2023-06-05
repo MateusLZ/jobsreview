@@ -6,8 +6,6 @@ let initialState = {
   isLogged: false,
   name: "",
   idUser: "",
-  idVaga: "",
-  nameVaga: "",
   update: false,
 };
 
@@ -18,7 +16,6 @@ const reducer = (state, action) => {
     case "logOut":
       AsyncStorage.removeItem("token");
       AsyncStorage.removeItem("location");
-
       return {
         ...state,
         isLogged: false,
@@ -30,18 +27,6 @@ const reducer = (state, action) => {
         Loading: false,
         idUser: action.payload.id,
         name: action.payload.name,
-      };
-    case "setId":
-      return {
-        ...state,
-        idUser: action.payload.id,
-      };
-
-    case "setVaga":
-      return {
-        ...state,
-        idVaga: action.payload.id,
-        nameVaga: action.payload.name,
       };
     case "update":
       return {

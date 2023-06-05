@@ -3,7 +3,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Preload from "../screens/Preload";
 import Login from "../screens/Login";
 import RegisterUser from "../screens/RegisterUser";
-import Home from "../screens/Home";
 import MainTab from "../stacks/MainTab";
 import Vaga from "../screens/Vaga";
 import { Context } from "../context/dataContext";
@@ -28,7 +27,6 @@ const MainStack = () => {
         </>
       ) : (
         <>
-          <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="RegisterUser" component={RegisterUser} />
         </>

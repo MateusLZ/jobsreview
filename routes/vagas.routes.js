@@ -36,7 +36,8 @@ vaga.get("/find", async (req, res) => {
   });
 
   if (Vagas) {
-    return res.json({ Vagas });
+    const a = Vagas[1];
+    return res.json({ a });
   } else {
     return null;
   }
@@ -44,7 +45,7 @@ vaga.get("/find", async (req, res) => {
 
 vaga.get("/findByVaga", async (req, res) => {
   const idVaga = req.query.id;
-  const vagas = await Vaga.findAll({
+  const vagas = await Vaga.findOne({
     where: {
       id: idVaga,
     },

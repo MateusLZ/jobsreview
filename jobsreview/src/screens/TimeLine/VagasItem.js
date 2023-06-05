@@ -3,8 +3,8 @@ import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Context } from "../context/dataContext";
-import api from "../api";
+import { Context } from "../../context/dataContext";
+import api from "../../api";
 import { FlatList } from "react-native";
 
 const Area = styled.TouchableOpacity`
@@ -53,38 +53,36 @@ const Tipo = styled.Text`
   color: #268596;
 `;
 
-export default ({ data }) => {
+export default ({}) => {
   const { state, dispatch } = useContext(Context);
   const navigation = useNavigation();
   const [vagas, setVaga] = useState([]);
 
-  useEffect(() => {
-    const onScreenLoad = async () => {
-      const list = await api.get("/vaga/find");
-      setVaga(list.data.Vagas);
-      dispatch({ type: "update", payload: false });
-    };
-    onScreenLoad();
-  }, [state.update]);
+  const getVagas = async () => {
+    try {
+      const res = await api.get("/vaga/find");
+      console.log(res);
+      //Aqui esta dando erro
+      if (res.status === 200) {
+        setVaga(res.data.Vagas);
+        dispatch({ type: "update", payload: false });
+      } else {
+        console.log(`Error: ${res.error}`);
+      }
+    } catch (error) {
+      console.log("Error occurred while fetching data:", error);
+    }
+  };
 
-  // const handleClick = () => {
-  //   navigation.navigate("Vaga", {
-  //     id: data.id,
-  //     nome: data.name,
-  //     endereco: data.address,
-  //     descricao: data.description,
-  //     tipo: data.type,
-  //   });
-  // };
+  getVagas();
+
+  // useEffect(() => {
+  //   getVagas();
+  //   console.log("fui chamado");
+  // }, []);
+
   const viewVaga = async (item) => {
-    await dispatch({ type: "setVaga", payload: item });
-    navigation.navigate("Vaga", {
-      id: item.id,
-      nome: item.name,
-      endereco: item.address,
-      descricao: item.description,
-      tipo: item.type,
-    });
+    navigation.navigate("Vaga", item);
   };
 
   return (
@@ -102,7 +100,7 @@ export default ({ data }) => {
               <Tipo>{item.type}</Tipo>
 
               <VerPerfilBotao>
-                <VerPerfilBotaoText>Ver Perfil</VerPerfilBotaoText>
+                <VerPerfilBotaoText>Ver Vaga</VerPerfilBotaoText>
               </VerPerfilBotao>
             </InfoArea>
           </Area>

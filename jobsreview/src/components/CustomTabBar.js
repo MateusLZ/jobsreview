@@ -64,14 +64,14 @@ export default ({ state, navigation }) => {
           color="#FFFFFF"
         />
       </TabItem>
-      <TabItem onPress={() => dispatch({ type: "logOut" })}>
+      {/* <TabItem onPress={() => dispatch({ type: "logOut" })}>
         <MaterialIcons
           style={{ opacity: state.index === 3 ? 1 : 0.5 }}
           name="exit-to-app"
           size={24}
           color="#FFFFFF"
         />
-      </TabItem>
+      </TabItem> */}
     </TabArea>
   );
 };

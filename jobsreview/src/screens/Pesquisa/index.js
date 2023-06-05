@@ -1,14 +1,25 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import styled from "styled-components/native";
+import { Context } from "../../context/dataContext";
+
+import React, { useContext } from "react";
 
 const Pesquisa = ({ navigation }) => {
+  const { dispatch } = useContext(Context);
+
   return (
     <View>
-      <Text>Pesquisa</Text>
+      <TabItem onPress={() => dispatch({ type: "logOut" })}>
+        <Text>sair</Text>
+      </TabItem>
     </View>
   );
 };
 
 export default Pesquisa;
 
-const styles = StyleSheet.create({});
+const TabItem = styled.TouchableOpacity`
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;

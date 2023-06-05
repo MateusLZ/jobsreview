@@ -46,4 +46,25 @@ user.post("/register", async (req, res) => {
   }
 });
 
+user.get("/findByUser", async (req, res) => {
+  const idUser = req.query.id;
+  try {
+    const user = await User.findOne({
+      where: {
+        id: idUser,
+      },
+      attributes: ["name", "description"],
+    });
+
+    if (user) {
+      return res.json({ user });
+    } else {
+      return res.status(404).json({ error: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 export default user;

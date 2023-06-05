@@ -1,5 +1,6 @@
-import { Sequelize } from "sequelize";
+import Sequelize from "sequelize";
 import connection from "../config/db.js";
+import Recrutador from "./Recrutador.js";
 
 const Vaga = connection.define("vaga", {
   id: {
@@ -24,6 +25,16 @@ const Vaga = connection.define("vaga", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  recrutadorId: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    references: {
+      model: "recrutador",
+      key: "id",
+    },
+  },
 });
+
+Vaga.belongsTo(Recrutador, { foreignKey: "recrutadorId" });
 
 export default Vaga;

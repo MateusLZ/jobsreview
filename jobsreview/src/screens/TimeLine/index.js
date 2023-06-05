@@ -4,7 +4,7 @@ import DeviceInfo from "react-native-device-info";
 import { request, PERMISSIONS } from "react-native-permissions";
 import Geolocation from "@react-native-community/geolocation";
 import Geocoder from "react-native-geocoding";
-import VagasItem from "../../components/VagasItem.js";
+import VagasItem from "./VagasItem.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
@@ -41,7 +41,6 @@ const TimeLine = ({ navigation }) => {
     if (result == "granted" || result == "unavailable") {
       setLoading(true);
       setLocationText("");
-      setList([]);
       Geolocation.getCurrentPosition((info) => {
         setCoords(info.coords);
         getVagas();
@@ -54,6 +53,7 @@ const TimeLine = ({ navigation }) => {
         Geocoder.from(lat, lng)
           .then((response) => {
             const results = response.results;
+            console.log(results);
             if (results.length > 0) {
               for (let i = 0; i < results.length; i++) {
                 const addressComponents = results[i].address_components;
@@ -77,17 +77,17 @@ const TimeLine = ({ navigation }) => {
   };
   const getVagas = async () => {
     setLoading(true);
-    setList([]);
 
     try {
-      const res = await api.get("/vagas");
+      const res = await api.get("/vaga/find");
       const location = await AsyncStorage.getItem("location");
 
       if (res.error != "undefined") {
         if (location) {
           setLocationText(location);
         }
-        setList(res.data);
+        setList(res.data.Vagas);
+        console.log(res.data.Vagas);
       } else {
         console.log(`Error: ${res.error}`);
       }

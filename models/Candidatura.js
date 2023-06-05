@@ -3,7 +3,7 @@ import connection from "../config/db.js";
 import User from "./User.js";
 import Vaga from "./Vaga.js";
 
-const Review = connection.define("review", {
+const Candidatura = connection.define("candidatura", {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -14,33 +14,26 @@ const Review = connection.define("review", {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
-      model: "users",
+      model: User,
       key: "id",
     },
   },
-  idRestaurant: {
+  idVaga: {
     type: Sequelize.INTEGER,
     allowNull: false,
     references: {
-      model: "Vaga",
+      model: Vaga,
       key: "id",
     },
   },
-  comment: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  stars: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-  },
 });
 
-Review.belongsTo(Vaga, {
-  foreignKey: "idRestaurant",
+Candidatura.belongsTo(Vaga, {
+  foreignKey: "idVaga",
 });
 
-Review.belongsTo(User, {
+Candidatura.belongsTo(User, {
   foreignKey: "idUser",
 });
-export default Review;
+
+export default Candidatura;
