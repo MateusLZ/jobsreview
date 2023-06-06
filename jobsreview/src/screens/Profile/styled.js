@@ -83,7 +83,8 @@ export const DescriptionText = styled.Text`
   text-align: start;
 `;
 
-export const HabilidadeArea = styled.View`
+export const HabilidadeArea = styled.View``;
+export const HeaderHabilidadeArea = styled.View`
   flex-direction: row;
   justify-content: space-between;
 `;
@@ -98,4 +99,29 @@ export const HabilidadeTitle = styled.Text`
 export const AdicionarHabilidade = styled.TouchableOpacity`
   margin-top: 20px;
   margin-right: 20px;
+`;
+export const Area = styled.TouchableOpacity`
+  background-color: #ffffff;
+  margin-bottom: 20px;
+  border-radius: 20px;
+  padding: 15px;
+  flex-direction: row;
+`;
+
+export const ListArea = styled.View`
+  margin-top: 30px;
+  margin-bottom: 30px;
+`;
+export const InfoArea = styled.View`
+  margin-left: 20px;
+  justify-content: space-between;
+`;
+export const UserName = styled.Text`
+  font-size: 17px;
+  font-weight: bold;
+`;
+
+export const Tipo = styled.Text`
+  font-size: 13px;
+  color: #268596;
 `;

@@ -1,10 +1,33 @@
 import express from "express";
 import UserSkill from "../models/UserSkill.js";
+import Skill from "../models/Skill.js";
 
 const userskill = express.Router();
 
 userskill.get("/", (req, res) => {
   res.send("Rota de Habilidades");
+});
+
+userskill.get("/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Procurar todas as habilidades do usuário com base no ID fornecido
+    const userSkills = await UserSkill.findAll({
+      where: {
+        userId: userId,
+      },
+      include: [Skill],
+    });
+
+    return res.json({ userSkills });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      error: "Erro ao buscar as habilidades do usuário",
+    });
+  }
 });
 
 userskill.get("/find", async (req, res) => {
@@ -23,12 +46,10 @@ userskill.post("/", async (req, res) => {
   const { userId, skillId, stars } = req.body;
 
   if (!userId || !skillId || stars === undefined) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        error: "UserId, skillId, and stars are required",
-      });
+    return res.status(400).json({
+      success: false,
+      error: "UserId, skillId, and stars are required",
+    });
   }
 
   try {

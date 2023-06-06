@@ -31,20 +31,17 @@ const Pesquisa = ({ navigation }) => {
   const onRegisterPressed = async () => {
     try {
       // Fazer a requisição POST para comparar a habilidade
-      console.log(stars);
       const response = await api.post("/skill/compare", { nome: type });
       const { id } = response.data;
 
       // Faça o que você deseja com o ID retornado (por exemplo, enviá-lo para a tabela de relacionamento)
 
       // Exemplo de como usar o ID:
-      console.log("ID da habilidade selecionada:", id);
       const userSkillResponse = await api.post("/userskill", {
         userId: state.idUser,
         skillId: id,
         stars: stars,
       });
-      console.log("Relacionamento criado com sucesso:", userSkillResponse.data);
     } catch (error) {
       console.error(error);
     }
