@@ -15,7 +15,11 @@ import {
   DescriptionArea,
   DescriptionTitle,
   DescriptionText,
+  HabilidadeArea,
+  HabilidadeTitle,
+  AdicionarHabilidade,
 } from "./styled";
+import { AntDesign } from "@expo/vector-icons";
 import api from "../../api";
 
 const Profile = ({ navigation }) => {
@@ -41,6 +45,10 @@ const Profile = ({ navigation }) => {
   useEffect(() => {
     onScreenLoad();
   }, [state.update]);
+
+  const newAbility = async (user) => {
+    navigation.navigate("Habilidade", user);
+  };
 
   return (
     <Container>
@@ -72,6 +80,12 @@ const Profile = ({ navigation }) => {
             <DescriptionTitle>Sobre</DescriptionTitle>
             <DescriptionText>{user.description}</DescriptionText>
           </DescriptionArea>
+          <HabilidadeArea>
+            <HabilidadeTitle>Habilidades</HabilidadeTitle>
+            <AdicionarHabilidade onPress={() => newAbility(user)}>
+              <AntDesign name="pluscircleo" size={24} color="black" />
+            </AdicionarHabilidade>
+          </HabilidadeArea>
         </PageBody>
       </Scroller>
     </Container>

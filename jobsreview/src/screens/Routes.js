@@ -4,11 +4,11 @@ import CustomTabBar from "../components/CustomTabBar";
 
 import Pesquisa from "./Pesquisa";
 import TimeLineRoutes from "./TimeLine/TimeLineRoutes";
-import Profile from "./Profile";
+import ProfileRoutes from "./Profile/ProfileRoutes";
 
 const Tab = createBottomTabNavigator();
 
-const Routes = ({ navigation }) => {
+function Routes({ navigation }) {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -18,9 +18,9 @@ const Routes = ({ navigation }) => {
     >
       <Tab.Screen name="TimeLine" component={TimeLineRoutes} />
       <Tab.Screen name="Pesquisa" component={Pesquisa} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Profile" component={ProfileRoutes} />
     </Tab.Navigator>
   );
-};
+}
 
 export default Routes;

@@ -26,6 +26,10 @@ const UserSkill = connection.define("User_Skill", {
       key: "id",
     },
   },
+  stars: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
 });
 
 User.belongsToMany(Skill, {

@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Routes from "../screens/Routes";
 import Preload from "../screens/Preload";
 import Login from "../screens/Login";
+import Vaga from "../screens/Vaga";
 import RegisterUser from "../screens/RegisterUser";
 import { Context } from "../context/dataContext";
 

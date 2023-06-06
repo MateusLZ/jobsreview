@@ -12,10 +12,6 @@ const Skill = connection.define("skill", {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  type: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
 });
 
 export default Skill;

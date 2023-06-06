@@ -114,7 +114,6 @@ const TimeLine = ({ navigation }) => {
   };
 
   const viewVaga = async (item) => {
-    console.log(item);
     await dispatch({ type: "setVaga", payload: item });
 
     navigation.navigate("Vaga", item);

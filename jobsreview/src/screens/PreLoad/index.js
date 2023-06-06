@@ -21,7 +21,6 @@ const PreLoad = ({ navigation }) => {
           await dispatch({ type: "verify", payload: data.data.authData });
           navigation.navigate("Routes");
         } catch (error) {
-          console.log(error);
           dispatch({ type: "login", payload: false });
         }
       } else {

@@ -82,3 +82,20 @@ export const DescriptionText = styled.Text`
   margin-left: 20px;
   text-align: start;
 `;
+
+export const HabilidadeArea = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const HabilidadeTitle = styled.Text`
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 20px;
+`;
+
+export const AdicionarHabilidade = styled.TouchableOpacity`
+  margin-top: 20px;
+  margin-right: 20px;
+`;
