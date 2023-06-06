@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
 import { createStackNavigator } from "@react-navigation/stack";
+import Routes from "../screens/Routes";
 import Preload from "../screens/Preload";
 import Login from "../screens/Login";
 import RegisterUser from "../screens/RegisterUser";
-import MainTab from "../stacks/MainTab";
-import Vaga from "../screens/Vaga";
 import { Context } from "../context/dataContext";
 
 const Stack = createStackNavigator();
@@ -14,7 +13,6 @@ const MainStack = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="Preload"
       screenOptions={{
         headerShown: false,
       }}
@@ -23,7 +21,8 @@ const MainStack = () => {
         <Stack.Screen name="Preload" component={Preload} />
       ) : state.isLogged ? (
         <>
-          <Stack.Screen name="MainTab" component={MainTab} />
+          <Stack.Screen name="Preload" component={Preload} />
+          <Stack.Screen name="Routes" component={Routes} />
         </>
       ) : (
         <>
@@ -31,7 +30,6 @@ const MainStack = () => {
           <Stack.Screen name="RegisterUser" component={RegisterUser} />
         </>
       )}
-      <Stack.Screen name="Vaga" component={Vaga} />
     </Stack.Navigator>
   );
 };

@@ -36,8 +36,7 @@ vaga.get("/find", async (req, res) => {
   });
 
   if (Vagas) {
-    const a = Vagas[1];
-    return res.json({ a });
+    return res.json({ Vagas });
   } else {
     return null;
   }

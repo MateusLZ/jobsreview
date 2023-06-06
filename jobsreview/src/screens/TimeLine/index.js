@@ -1,4 +1,4 @@
-import { Platform, RefreshControl } from "react-native";
+import { FlatList, Platform, RefreshControl } from "react-native";
 import React, { useEffect, useState, useContext } from "react";
 import DeviceInfo from "react-native-device-info";
 import { request, PERMISSIONS } from "react-native-permissions";
@@ -6,7 +6,7 @@ import Geolocation from "@react-native-community/geolocation";
 import Geocoder from "react-native-geocoding";
 import VagasItem from "./VagasItem.js";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { Context } from "../../context/dataContext.js";
 import {
   Container,
   Scroller,
@@ -18,6 +18,13 @@ import {
   LocationFinder,
   LoadingIcon,
   ListArea,
+  Area,
+  Icon,
+  InfoArea,
+  UserName,
+  VerPerfilBotao,
+  VerPerfilBotaoText,
+  Tipo,
 } from "./styles";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import api from "../../api";
@@ -28,6 +35,7 @@ const TimeLine = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const { dispatch } = useContext(Context);
 
   Geocoder.init("AIzaSyAyzbZ2Tphtadc13gq6MhBISoxXNXzR1_c");
 
@@ -53,7 +61,6 @@ const TimeLine = ({ navigation }) => {
         Geocoder.from(lat, lng)
           .then((response) => {
             const results = response.results;
-            console.log(results);
             if (results.length > 0) {
               for (let i = 0; i < results.length; i++) {
                 const addressComponents = results[i].address_components;
@@ -87,7 +94,6 @@ const TimeLine = ({ navigation }) => {
           setLocationText(location);
         }
         setList(res.data.Vagas);
-        console.log(res.data.Vagas);
       } else {
         console.log(`Error: ${res.error}`);
       }
@@ -105,6 +111,13 @@ const TimeLine = ({ navigation }) => {
   const onRefresh = () => {
     setRefreshing(false);
     getVagas();
+  };
+
+  const viewVaga = async (item) => {
+    console.log(item);
+    await dispatch({ type: "setVaga", payload: item });
+
+    navigation.navigate("Vaga", item);
   };
 
   return (
@@ -135,9 +148,28 @@ const TimeLine = ({ navigation }) => {
         {loading && <LoadingIcon size="large" color="#FFF" />}
 
         <ListArea>
-          {list.map((item, k) => (
-            <VagasItem key={k} data={item} />
-          ))}
+          <FlatList
+            data={list}
+            renderItem={({ item }) => {
+              return (
+                <Area onPress={() => viewVaga(item)}>
+                  <Icon>
+                    <AntDesign name="iconfontdesktop" size={50} color="black" />
+                  </Icon>
+                  <InfoArea>
+                    <UserName>{item.name}</UserName>
+
+                    <Tipo>{item.type}</Tipo>
+
+                    <VerPerfilBotao>
+                      <VerPerfilBotaoText>Ver Vaga</VerPerfilBotaoText>
+                    </VerPerfilBotao>
+                  </InfoArea>
+                </Area>
+              );
+            }}
+            keyExtractor={(item) => item.id}
+          />
         </ListArea>
       </Scroller>
     </Container>

@@ -14,7 +14,7 @@ const verifyToken = (token, res) => {
 
 const user = express.Router();
 
-user.get("/verify", (req, res) => {
+user.get("/", (req, res) => {
   const token = req.headers["token"];
   const authData = verifyToken(token, res);
 });

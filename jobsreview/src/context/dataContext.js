@@ -7,6 +7,8 @@ let initialState = {
   name: "",
   idUser: "",
   update: false,
+  idVaga: "",
+  nameVaga: "",
 };
 
 const reducer = (state, action) => {
@@ -27,6 +29,12 @@ const reducer = (state, action) => {
         Loading: false,
         idUser: action.payload.id,
         name: action.payload.name,
+      };
+    case "setVaga":
+      return {
+        ...state,
+        idVaga: action.payload.id,
+        nameVaga: action.payload.name,
       };
     case "update":
       return {

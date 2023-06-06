@@ -6,28 +6,30 @@ import { Context } from "../../context/dataContext";
 
 import api from "../../api";
 
-const PreLoad = () => {
+const PreLoad = ({ navigation }) => {
   const { state, dispatch } = useContext(Context);
-
-  const checkToken = async () => {
-    const token = await AsyncStorage.getItem("token");
-    if (token) {
-      try {
-        const data = await api.get("/user/verify", {
-          headers: {
-            token: token,
-          },
-        });
-        await dispatch({ type: "verify", payload: data.data.authData });
-      } catch (error) {
-        console.log(error);
+  setTimeout(() => {
+    const checkToken = async () => {
+      const token = await AsyncStorage.getItem("token");
+      if (token) {
+        try {
+          const data = await api.get("/user", {
+            headers: {
+              token: token,
+            },
+          });
+          await dispatch({ type: "verify", payload: data.data.authData });
+          navigation.navigate("Routes");
+        } catch (error) {
+          console.log(error);
+          dispatch({ type: "login", payload: false });
+        }
+      } else {
         dispatch({ type: "login", payload: false });
       }
-    } else {
-      dispatch({ type: "login", payload: false });
-    }
-  };
-  checkToken();
+    };
+    checkToken();
+  }, 500);
 
   return (
     <Container>

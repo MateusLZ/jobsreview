@@ -21,8 +21,6 @@ import api from "../../api";
 const Profile = ({ navigation }) => {
   const { state, dispatch } = useContext(Context);
   const [user, setUser] = useState({});
-  console.log(user);
-  console.log(setUser);
 
   const onScreenLoad = async () => {
     try {
@@ -42,7 +40,7 @@ const Profile = ({ navigation }) => {
 
   useEffect(() => {
     onScreenLoad();
-  }, []);
+  }, [state.update]);
 
   return (
     <Container>

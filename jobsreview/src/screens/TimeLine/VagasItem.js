@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Context } from "../../context/dataContext";
 import api from "../../api";
 import { FlatList } from "react-native";
@@ -61,7 +60,6 @@ export default ({}) => {
   const getVagas = async () => {
     try {
       const res = await api.get("/vaga/find");
-      console.log(res);
       //Aqui esta dando erro
       if (res.status === 200) {
         setVaga(res.data.Vagas);
@@ -74,14 +72,13 @@ export default ({}) => {
     }
   };
 
-  getVagas();
-
-  // useEffect(() => {
-  //   getVagas();
-  //   console.log("fui chamado");
-  // }, []);
+  useEffect(() => {
+    getVagas();
+  }, []);
 
   const viewVaga = async (item) => {
+    await dispatch({ type: "setVaga", payload: item });
+
     navigation.navigate("Vaga", item);
   };
 
