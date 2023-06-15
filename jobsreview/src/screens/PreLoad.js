@@ -1,10 +1,10 @@
 import React, { useEffect, useContext } from "react";
-import { Container, LoadingIcon } from "./styles";
-import Logo from "../../components/Logo";
+import Logo from "../components/Logo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Context } from "../../context/dataContext";
+import { Context } from "../context/dataContext";
+import styled from "styled-components/native";
 
-import api from "../../api";
+import api from "../api";
 
 const PreLoad = ({ navigation }) => {
   const { state, dispatch } = useContext(Context);
@@ -21,10 +21,10 @@ const PreLoad = ({ navigation }) => {
           await dispatch({ type: "verify", payload: data.data.authData });
           navigation.navigate("Routes");
         } catch (error) {
-          dispatch({ type: "login", payload: false });
+          dispatch({ type: "logIn", payload: false });
         }
       } else {
-        dispatch({ type: "login", payload: false });
+        dispatch({ type: "logIn", payload: false });
       }
     };
     checkToken();
@@ -39,3 +39,14 @@ const PreLoad = ({ navigation }) => {
 };
 
 export default PreLoad;
+
+const Container = styled.SafeAreaView`
+  background-color: #283593;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+`;
+
+const LoadingIcon = styled.ActivityIndicator`
+  margin-top: 50px;
+`;

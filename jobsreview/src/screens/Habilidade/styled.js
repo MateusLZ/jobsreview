@@ -78,11 +78,27 @@ export const CustomButton = styled.TouchableOpacity`
   align-items: center;
   margin-top: 20px;
 `;
+export const CustomButtonExcluir = styled.TouchableOpacity`
+  height: 50px;
+  width: 300px;
+  background-color: #fff;
+  border-radius: 15px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  border: 1px solid;
+  border-color: #2658ab;
+`;
 
 export const CustomButtonText = styled.Text`
   font-weight: 700;
   font-size: 15px;
   color: #fff;
+`;
+export const CadastroMensagem = styled.Text`
+  margin-top: 20px;
+  font-weight: 700;
+  font-size: 15px;
 `;
 export const BackButton = styled.TouchableOpacity`
   position: absolute;

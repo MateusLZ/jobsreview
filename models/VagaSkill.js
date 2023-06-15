@@ -26,15 +26,13 @@ const VagaSkill = connection.define("vaga_skill", {
       key: "id",
     },
   },
+  stars: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+  },
 });
 
-Vaga.belongsToMany(Skill, {
-  through: VagaSkill,
-  foreignKey: "vagaId",
-});
-Skill.belongsToMany(Vaga, {
-  through: VagaSkill,
-  foreignKey: "skillId",
-});
+VagaSkill.belongsTo(Vaga, { foreignKey: "vagaId" });
+VagaSkill.belongsTo(Skill, { foreignKey: "skillId" });
 
 export default VagaSkill;

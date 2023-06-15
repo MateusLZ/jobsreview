@@ -109,24 +109,6 @@ export const HardName = styled.Text`
 `;
 export const HardNivel = styled.Text``;
 
-export const Area = styled.TouchableOpacity`
-  width: 150px;
-  height: 50px;
-  background-color: #ffffff;
-  margin-bottom: 10px;
-`;
-
-export const InfoArea = styled.View`
-  width: 100%;
-  align-items: center;
-`;
-export const UserName = styled.Text`
-  text-align: center;
-  width: 100%;
-  font-size: 17px;
-  font-weight: bold;
-`;
-
 export const DescriptionArea = styled.View`
   margin-top: 40px;
   border-top-color: #cccccc;
@@ -137,40 +119,14 @@ export const DescriptionTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
   margin-left: 20px;
-  margin-top: 10px;
 `;
 
-export const EmpresaArea = styled.View`
-  margin-top: 10px;
-  margin-left: 30px;
-  min-height: 30px;
-`;
-export const LocalizacaoArea = styled.View`
-  margin-top: 10px;
-  margin-left: 30px;
-  min-height: 30px;
-`;
-export const SobreArea = styled.View`
-  margin-top: 10px;
-  margin-left: 30px;
-  min-height: 30px;
-`;
-export const EmpresaTitle = styled.Text`
-  margin-left: 15px;
-  font-size: 15px;
-`;
-export const LocalizacaoTitle = styled.Text`
-  margin-left: 15px;
-  font-size: 15px;
-`;
-
-export const SubDescriptionTitle = styled.Text`
-  font-size: 17px;
-  font-weight: bold;
-`;
 export const DescriptionText = styled.Text`
   font-size: 15px;
-  margin-left: 15px;
+  text-align: center;
+  margin-top: 30px;
+  margin-left: 20px;
+  text-align: start;
 `;
 
 export const AplicationArea = styled.View`
@@ -180,7 +136,7 @@ export const AplicationArea = styled.View`
   flex-direction: row;
   justify-content: space-around;
   align-items: end;
-  margin-bottom: 40px;
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 export const CustomButton = styled.TouchableOpacity`
   margin-top: 20px;
@@ -207,4 +163,22 @@ export const BackButton = styled.TouchableOpacity`
 
 export const LoadingIcon = styled.ActivityIndicator`
   margin-top: 50px;
+`;
+
+export const Area = styled.TouchableOpacity`
+  width: 150px;
+  height: 50px;
+  background-color: #ffffff;
+  margin-bottom: 10px;
+`;
+
+export const InfoArea = styled.View`
+  width: 100%;
+  align-items: center;
+`;
+export const UserName = styled.Text`
+  text-align: center;
+  width: 100%;
+  font-size: 17px;
+  font-weight: bold;
 `;

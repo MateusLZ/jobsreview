@@ -29,22 +29,16 @@ const Login = ({ navigation }) => {
 
         if (authData.status === 200) {
           await AsyncStorage.setItem("token", authData.data.token);
-          dispatch({ type: "login", payload: true });
+          dispatch({ type: "logIn", payload: true });
         } else {
-          alert("Email ou Senha Inválidos");
+          alert("Email ou Senha Inválidos1");
           setPasswordField("");
         }
       } catch (error) {
-        alert("Email ou Senha Inválidos");
+        alert("Email ou Senha Inválidos2");
         setPasswordField("");
       }
     }
-  };
-
-  const handleMessageButtonClick = () => {
-    navigation.reset({
-      routes: [{ name: "RegisterUser" }],
-    });
   };
 
   return (
@@ -69,7 +63,7 @@ const Login = ({ navigation }) => {
         </CustomButton>
       </InputArea>
 
-      <SignMessageButton onPress={handleMessageButtonClick}>
+      <SignMessageButton onPress={() => navigation.navigate("RegisterUser")}>
         <SignMessageButtonText>
           Ainda não possui uma conta?
         </SignMessageButtonText>

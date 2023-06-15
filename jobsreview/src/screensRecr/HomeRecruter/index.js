@@ -5,7 +5,7 @@ import { request, PERMISSIONS } from "react-native-permissions";
 import Geolocation from "@react-native-community/geolocation";
 import Geocoder from "react-native-geocoding";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Context } from "../../context/dataContext.js";
+import { Context } from "../../context/dataContext";
 import {
   Container,
   Scroller,
@@ -24,16 +24,21 @@ import {
   VerPerfilBotao,
   VerPerfilBotaoText,
   Tipo,
+  JanelaModal,
 } from "./styles";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import api from "../../api";
+import CandidatoModal from "../Candidato";
 
-const TimeLine = ({ navigation }) => {
+const HomeRecruter = ({ navigation }) => {
   const [locationText, setLocationText] = useState("");
   const [coords, setCoords] = useState(null);
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [visibleModal, setVisibleModal] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+
   const { dispatch } = useContext(Context);
 
   Geocoder.init("AIzaSyAyzbZ2Tphtadc13gq6MhBISoxXNXzR1_c");
@@ -50,7 +55,7 @@ const TimeLine = ({ navigation }) => {
       setLocationText("");
       Geolocation.getCurrentPosition((info) => {
         setCoords(info.coords);
-        getVagas();
+        getCand();
         let lat = null;
         let lng = null;
         if (info) {
@@ -81,18 +86,18 @@ const TimeLine = ({ navigation }) => {
       });
     }
   };
-  const getVagas = async () => {
+  const getCand = async () => {
     setLoading(true);
 
     try {
-      const res = await api.get("/vaga/find");
+      const res = await api.get("/user/find");
       const location = await AsyncStorage.getItem("location");
 
       if (res.error != "undefined") {
         if (location) {
           setLocationText(location);
         }
-        setList(res.data.Vagas);
+        setList(res.data.Users);
       } else {
         console.log(`Error: ${res.error}`);
       }
@@ -104,18 +109,17 @@ const TimeLine = ({ navigation }) => {
   };
 
   useEffect(() => {
-    getVagas();
+    getCand();
   }, []);
 
   const onRefresh = () => {
     setRefreshing(false);
-    getVagas();
+    getCand();
   };
 
-  const viewVaga = async (item) => {
-    await dispatch({ type: "setVaga", payload: item });
-
-    navigation.navigate("Vaga", item);
+  const openModal = (item) => {
+    setSelectedItem(item);
+    setVisibleModal(true);
   };
 
   return (
@@ -126,7 +130,7 @@ const TimeLine = ({ navigation }) => {
         }
       >
         <HeaderArea>
-          <HeaderTitle numberOfLines={2}>Encontre a sua vaga </HeaderTitle>
+          <HeaderTitle numberOfLines={2}>Candidatos</HeaderTitle>
           <SearchButton onPress={() => navigation.navigate("Pesquisa")}>
             <AntDesign name="search1" size={24} color="#FFFFFF" />
           </SearchButton>
@@ -150,17 +154,17 @@ const TimeLine = ({ navigation }) => {
             data={list}
             renderItem={({ item }) => {
               return (
-                <Area onPress={() => viewVaga(item)}>
+                <Area onPress={() => openModal(item)}>
                   <Icon>
                     <AntDesign name="iconfontdesktop" size={50} color="black" />
                   </Icon>
                   <InfoArea>
                     <UserName>{item.name}</UserName>
 
-                    <Tipo>{` ${item.type}  |  ${item.address}`}</Tipo>
+                    <Tipo>{item.description}</Tipo>
 
                     <VerPerfilBotao>
-                      <VerPerfilBotaoText>Ver Vaga</VerPerfilBotaoText>
+                      <VerPerfilBotaoText>Ver Perfil</VerPerfilBotaoText>
                     </VerPerfilBotao>
                   </InfoArea>
                 </Area>
@@ -168,10 +172,21 @@ const TimeLine = ({ navigation }) => {
             }}
             keyExtractor={(item) => item.id}
           />
+          <JanelaModal
+            visible={visibleModal}
+            transparent={true}
+            animationType="slide"
+            onRequestClose={() => setVisibleModal(false)}
+          >
+            <CandidatoModal
+              handleClose={() => setVisibleModal(false)}
+              route={selectedItem}
+            />
+          </JanelaModal>
         </ListArea>
       </Scroller>
     </Container>
   );
 };
 
-export default TimeLine;
+export default HomeRecruter;

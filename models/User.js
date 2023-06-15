@@ -23,9 +23,16 @@ const User = connection.define(
         isEmail: true,
       },
     },
+    tipo_login: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+    },
     password: {
       type: Sequelize.STRING,
       allowNull: false,
+    },
+    description: {
+      type: Sequelize.STRING,
     },
   },
   {
@@ -37,7 +44,7 @@ const User = connection.define(
         }
       },
       beforeUpdate: async (user) => {
-        if (user.password) {
+        if (user.changed("password")) {
           const salt = await bcrypt.genSaltSync(10, "a");
           user.password = bcrypt.hashSync(user.password, salt);
         }

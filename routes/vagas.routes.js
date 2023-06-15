@@ -1,6 +1,6 @@
 import express from "express";
 import Vaga from "../models/Vaga.js";
-import User from "../models/User.js";
+import Recrutador from "../models/Recrutador.js";
 
 const vaga = express.Router();
 
@@ -9,25 +9,28 @@ vaga.get("/", (req, res) => {
 });
 
 vaga.post("/register", async (req, res) => {
-  const { name, type, description, address } = req.body;
+  const { name, type, description, address, recrutadorId, empresa } = req.body;
 
-  const alreadyExistsVaga = await Vaga.findOne({
-    where: { name },
-  }).catch((err) => {
-    console.log("Error: ", err);
-  });
+  try {
+    const newVaga = new Vaga({
+      name,
+      type,
+      description,
+      address,
+      recrutadorId,
+      empresa,
+    });
+    const savedVaga = await newVaga.save();
 
-  if (alreadyExistsVaga) {
-    return res.status(409).json({ message: "Vaga already registered!" });
-  }
+    if (savedVaga) {
+      const vagaId = savedVaga.id; // Obtém o ID da vaga recém-criada
 
-  const newVaga = new Vaga({ name, type, description, address });
-  const savedVaga = await newVaga.save().catch((err) => {
+      res.json({ id: vagaId, message: "New Vaga Registered!" });
+    }
+  } catch (err) {
     console.log("Error: ", err);
     res.status(500).json({ error: "Sorry! Could not register the Vaga" });
-  });
-
-  if (savedVaga) res.json({ message: "New Vaga Registered!" });
+  }
 });
 
 vaga.get("/find", async (req, res) => {
@@ -56,6 +59,50 @@ vaga.get("/findByVaga", async (req, res) => {
     return res.json({ vagas });
   } else {
     return null;
+  }
+});
+
+vaga.get("/:userId", async (req, res) => {
+  console.log(req.params);
+  const { userId } = req.params;
+
+  console.log(userId);
+  try {
+    // Procurar todas as habilidades do usuário com base no ID fornecido
+    const recrutadorVagas = await Vaga.findAll({
+      where: {
+        recrutadorId: userId,
+      },
+    });
+
+    return res.json({ recrutadorVagas });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      error: "Erro ao buscar as habilidades do usuário",
+    });
+  }
+});
+
+vaga.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Procurar a vaga pelo ID fornecido
+    const vaga = await Vaga.findOne({ where: { id } });
+
+    if (!vaga) {
+      return res.status(404).json({ error: "Vaga not found" });
+    }
+
+    // Excluir a vaga
+    await vaga.destroy();
+
+    return res.json({ success: true, message: "Vaga deleted" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Failed to delete the Vaga" });
   }
 });
 

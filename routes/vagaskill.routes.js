@@ -1,26 +1,26 @@
 import express from "express";
-import UserSkill from "../models/UserSkill.js";
+import VagaSkill from "../models/VagaSkill.js";
 import Skill from "../models/Skill.js";
 
-const userskill = express.Router();
+const vagaskill = express.Router();
 
-userskill.get("/", (req, res) => {
+vagaskill.get("/", (req, res) => {
   res.send("Rota de Habilidades");
 });
 
-userskill.get("/user/:userId", async (req, res) => {
+vagaskill.get("/user/:userId", async (req, res) => {
   const { userId } = req.params;
 
   try {
     // Procurar todas as habilidades do usuário com base no ID fornecido
-    const userSkills = await UserSkill.findAll({
+    const vagaskills = await VagaSkill.findAll({
       where: {
         userId: userId,
       },
       include: [Skill],
     });
 
-    return res.json({ userSkills });
+    return res.json({ vagaskills });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -30,22 +30,32 @@ userskill.get("/user/:userId", async (req, res) => {
   }
 });
 
-userskill.get("/find", async (req, res) => {
-  const UserSkills = await UserSkill.findAll().catch((err) => {
-    console.log(err);
-  });
+vagaskill.get("/:vagaId/habilidades", async (req, res) => {
+  const { vagaId } = req.params;
 
-  if (UserSkills) {
-    return res.json({ UserSkills });
-  } else {
-    return null;
+  try {
+    // Procurar todas as habilidades da vaga com base no ID fornecido
+    const vagaSkills = await VagaSkill.findAll({
+      where: {
+        vagaId: vagaId,
+      },
+      include: [Skill],
+    });
+
+    return res.json({ vagaSkills });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      error: "Erro ao buscar as habilidades da vaga",
+    });
   }
 });
 
-userskill.post("/", async (req, res) => {
-  const { userId, skillId, stars } = req.body;
+vagaskill.post("/", async (req, res) => {
+  const { idVaga, skillId, stars } = req.body;
 
-  if (!userId || !skillId || stars === undefined) {
+  if (!idVaga || !skillId || stars === undefined) {
     return res.status(400).json({
       success: false,
       error: "UserId, skillId, and stars are required",
@@ -54,9 +64,9 @@ userskill.post("/", async (req, res) => {
 
   try {
     // Verificar se já existe um registro com os mesmos valores de userId e skillId
-    const existingUserSkill = await UserSkill.findOne({
+    const existingUserSkill = await VagaSkill.findOne({
       where: {
-        userId: userId,
+        vagaId: idVaga,
         skillId: skillId,
       },
     });
@@ -66,16 +76,16 @@ userskill.post("/", async (req, res) => {
       existingUserSkill.stars = stars;
       await existingUserSkill.save();
 
-      return res.json({ success: true, userSkill: existingUserSkill });
+      return res.json({ success: true, vagaSkill: existingUserSkill });
     } else {
       // Se o registro não existe, criar um novo registro na tabela UserSkill
-      const newUserSkill = await UserSkill.create({
-        userId: userId,
+      const newVagaSkill = await VagaSkill.create({
+        vagaId: idVaga,
         skillId: skillId,
         stars: stars,
       });
 
-      return res.json({ success: true, userSkill: newUserSkill });
+      return res.json({ success: true, vagaSkill: newVagaSkill });
     }
   } catch (error) {
     console.log(error);
@@ -86,14 +96,14 @@ userskill.post("/", async (req, res) => {
   }
 });
 
-userskill.delete("/delete/:id", async (req, res) => {
+vagaskill.delete("/delete/:id", async (req, res) => {
   const { id } = req.params;
 
   try {
     // Procurar o registro pelo ID fornecido
-    const userSkill = await UserSkill.findByPk(id);
+    const vagaSkill = await VagaSkill.findByPk(id);
 
-    if (!userSkill) {
+    if (!vagaSkill) {
       return res.status(404).json({
         success: false,
         error: "Registro não encontrado",
@@ -101,7 +111,7 @@ userskill.delete("/delete/:id", async (req, res) => {
     }
 
     // Excluir o registro
-    await userSkill.destroy();
+    await vagaSkill.destroy();
 
     return res.json({ success: true });
   } catch (error) {
@@ -113,4 +123,4 @@ userskill.delete("/delete/:id", async (req, res) => {
   }
 });
 
-export default userskill;
+export default vagaskill;

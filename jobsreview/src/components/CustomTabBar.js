@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import styled from "styled-components/native";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -30,48 +30,85 @@ const AvatarIcon = styled.Image`
   border-radius: 12px;
 `;
 
-export default ({ state, navigation }) => {
+export default ({ state, navigation, showCustomTabBar }) => {
   const { state: user } = useContext(Context);
   const { dispatch } = useContext(Context);
+
   const goTo = (screenName) => {
     navigation.navigate(screenName);
   };
+  const currentRoute = state.routes[state.index];
+  const routeName = currentRoute.state
+    ? currentRoute.state.routeNames[currentRoute.state.index]
+    : currentRoute.name;
 
+  const isRecruiter = user.typeLogin;
+
+  if (
+    routeName === "Vaga" ||
+    routeName === "Habilidade" ||
+    routeName === "Candidato" ||
+    routeName === "NewVaga"
+  ) {
+    return null;
+  }
   return (
     <TabArea>
-      <TabItem onPress={() => goTo("TimeLine")}>
-        <AntDesign
-          style={{ opacity: state.index === 0 ? 1 : 0.5 }}
-          name="home"
-          size={24}
-          color="#FFFFFF"
-        />
-      </TabItem>
-      <TabItem onPress={() => goTo("Pesquisa")}>
-        <AntDesign
-          style={{ opacity: state.index === 1 ? 1 : 0.5 }}
-          name="search1"
-          size={24}
-          color="#FFFFFF"
-        />
-      </TabItem>
-
-      <TabItem onPress={() => goTo("Profile")}>
-        <AntDesign
-          style={{ opacity: state.index === 2 ? 1 : 0.5 }}
-          name="user"
-          size={24}
-          color="#FFFFFF"
-        />
-      </TabItem>
-      {/* <TabItem onPress={() => dispatch({ type: "logOut" })}>
-        <MaterialIcons
-          style={{ opacity: state.index === 3 ? 1 : 0.5 }}
-          name="exit-to-app"
-          size={24}
-          color="#FFFFFF"
-        />
-      </TabItem> */}
+      {isRecruiter ? (
+        <>
+          <TabItem onPress={() => goTo("HomeRecruter")}>
+            <AntDesign
+              style={{ opacity: state.index === 0 ? 1 : 0.5 }}
+              name="home"
+              size={24}
+              color="#FFFFFF"
+            />
+          </TabItem>
+          <TabItem onPress={() => goTo("Vagas")}>
+            <AntDesign
+              style={{ opacity: state.index === 1 ? 1 : 0.5 }}
+              name="search1"
+              size={24}
+              color="#FFFFFF"
+            />
+          </TabItem>
+          <TabItem onPress={() => goTo("Perfil")}>
+            <AntDesign
+              style={{ opacity: state.index === 2 ? 1 : 0.5 }}
+              name="user"
+              size={24}
+              color="#FFFFFF"
+            />
+          </TabItem>
+        </>
+      ) : (
+        <>
+          <TabItem onPress={() => goTo("TimeLine")}>
+            <AntDesign
+              style={{ opacity: state.index === 0 ? 1 : 0.5 }}
+              name="home"
+              size={24}
+              color="#FFFFFF"
+            />
+          </TabItem>
+          <TabItem onPress={() => goTo("Pesquisa")}>
+            <AntDesign
+              style={{ opacity: state.index === 1 ? 1 : 0.5 }}
+              name="search1"
+              size={24}
+              color="#FFFFFF"
+            />
+          </TabItem>
+          <TabItem onPress={() => goTo("Profile")}>
+            <AntDesign
+              style={{ opacity: state.index === 2 ? 1 : 0.5 }}
+              name="user"
+              size={24}
+              color="#FFFFFF"
+            />
+          </TabItem>
+        </>
+      )}
     </TabArea>
   );
 };

@@ -3,14 +3,14 @@ import styled from "styled-components/native";
 
 export const Container = styled.SafeAreaView`
   background-color: #283593;
+  justify-content: flex-end;
   flex: 1;
-  justify-content: center;
-  align-items: center;
 `;
 
 export const InputArea = styled.View`
   width: 100%;
-  padding: 40px;
+  padding-left: 40px;
+  padding-right: 40px;
 `;
 export const CustomButton = styled.TouchableOpacity`
   height: 60px;

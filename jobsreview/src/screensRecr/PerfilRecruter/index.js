@@ -1,7 +1,8 @@
-import { FlatList } from "react-native";
+import { StyleSheet, Text, View, FlatList, Modal } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../../context/dataContext";
 import { ActionModal } from "../../components/ActionModal";
+import { format } from "date-fns";
 
 import {
   Container,
@@ -14,23 +15,28 @@ import {
   AplicationArea,
   CustomButton,
   CustomButtonText,
-  DescriptionArea,
-  DescriptionTitle,
-  DescriptionText,
   HabilidadeArea,
   HabilidadeTitle,
-  AdicionarHabilidade,
+  AdicionarVaga,
   HeaderHabilidadeArea,
-  Area,
   ListArea,
   InfoArea,
   UserName,
   LoadingIcon,
   JanelaModal,
+  Tipo,
+  TopList,
+  NomeVaga,
+  DataCriado,
+  StatusVaga,
+  AreaFlatlist,
+  Status,
+  NameArea,
+  DataArea,
+  StatusArea,
 } from "./styled";
 import { AntDesign } from "@expo/vector-icons";
 import api from "../../api";
-import StarComponent from "../../components/StarComponent";
 
 const Profile = ({ navigation }) => {
   const { state, dispatch } = useContext(Context);
@@ -43,12 +49,12 @@ const Profile = ({ navigation }) => {
     const onScreenLoad = async () => {
       setLoading(true);
       try {
-        const response = await api.get("/user/findByUser", {
+        const response = await api.get("/recrutador/findByUser", {
           params: {
             id: state.idUser,
           },
         });
-        const userData = response.data.user;
+        const userData = response.data.recrutador;
         setUser(userData);
         setLoading(false);
 
@@ -57,29 +63,32 @@ const Profile = ({ navigation }) => {
         console.error("Error fetching user data:", error);
       }
     };
-
-    const fetchUserSkills = async () => {
-      try {
-        const response = await api.get(`/userskill/user/${state.idUser}`);
-        const userSkills = response.data.userSkills;
-        setList(userSkills);
-      } catch (error) {
-        console.error("Error fetching user skills:", error);
-      }
-    };
+    getMyVagas();
     onScreenLoad();
-    fetchUserSkills();
+    // fetchUserSkills();
   }, [state.update]);
 
-  const newAbility = async () => {
-    navigation.navigate("Habilidade");
-  };
-  const minhasVagas = async () => {
-    navigation.navigate("VagasAplicada");
+  const newVaga = async () => {
+    navigation.navigate("NewVaga");
   };
 
-  const editAbility = async (item) => {
-    navigation.navigate("Habilidade", item);
+  const getMyVagas = async () => {
+    setLoading(true);
+
+    try {
+      const res = await api.get(`/vaga/${state.idUser}`);
+      setList(res.data.recrutadorVagas);
+    } catch (error) {
+      console.log("Error occurred while fetching data:", error);
+    }
+
+    setLoading(false);
+  };
+
+  const viewVaga = async (item) => {
+    await dispatch({ type: "setVaga", payload: item });
+
+    navigation.navigate("Vaga", item);
   };
 
   return (
@@ -88,7 +97,7 @@ const Profile = ({ navigation }) => {
         <Header>
           <FotoPerfil />
           <HeaderInfo>
-            <NomeUser>{user.name}</NomeUser>
+            <NomeUser>{user.nome}</NomeUser>
             <AplicationArea>
               <CustomButton onPress={() => setVisibleModal(true)}>
                 <CustomButtonText>Editar perfil</CustomButtonText>
@@ -111,12 +120,10 @@ const Profile = ({ navigation }) => {
                   border: "1px solid",
                   borderColor: "#2658ab",
                 }}
+                onPress={() => dispatch({ type: "logOut" })}
               >
-                <CustomButtonText
-                  onPress={() => minhasVagas()}
-                  style={{ color: "#2658ab" }}
-                >
-                  Minhas Vagas
+                <CustomButtonText style={{ color: "#2658ab" }}>
+                  Sair
                 </CustomButtonText>
               </CustomButton>
             </AplicationArea>
@@ -125,38 +132,52 @@ const Profile = ({ navigation }) => {
         <PageBody>
           {loading && <LoadingIcon size="large" color="#000000" />}
 
-          <DescriptionArea>
-            <DescriptionTitle>Sobre</DescriptionTitle>
-            <DescriptionText>{user.description}</DescriptionText>
-          </DescriptionArea>
           <HabilidadeArea>
             <HeaderHabilidadeArea>
-              <HabilidadeTitle>Habilidades</HabilidadeTitle>
-              <AdicionarHabilidade onPress={() => newAbility()}>
+              <HabilidadeTitle>Vagas Cadastradas</HabilidadeTitle>
+              <AdicionarVaga onPress={() => newVaga()}>
                 <AntDesign name="pluscircleo" size={24} color="black" />
-              </AdicionarHabilidade>
+              </AdicionarVaga>
             </HeaderHabilidadeArea>
-
-            <ListArea>
+          </HabilidadeArea>
+          <ListArea>
+            <TopList>
+              <NameArea>
+                <NomeVaga>Nome</NomeVaga>
+              </NameArea>
+              <DataArea>
+                <DataCriado>Data</DataCriado>
+              </DataArea>
+              <StatusArea>
+                <StatusVaga>Status</StatusVaga>
+              </StatusArea>
+            </TopList>
+            <AreaFlatlist>
               <FlatList
                 data={list}
-                numColumns={2}
-                columnWrapperStyle={{ justifyContent: "space-between" }}
                 renderItem={({ item }) => {
                   return (
-                    <Area onPress={() => editAbility(item)}>
-                      <InfoArea>
-                        <UserName>{item.skill.name}</UserName>
+                    <InfoArea onPress={() => viewVaga(item)}>
+                      <NameArea>
+                        <UserName>{item.name}</UserName>
+                      </NameArea>
 
-                        <StarComponent stars={item.stars} />
-                      </InfoArea>
-                    </Area>
+                      <DataArea>
+                        <Tipo>
+                          {format(new Date(item.createdAt), "dd/MM/yyyy")}
+                        </Tipo>
+                      </DataArea>
+
+                      <StatusArea>
+                        <Status>OK</Status>
+                      </StatusArea>
+                    </InfoArea>
                   );
                 }}
                 keyExtractor={(item) => item.id}
               />
-            </ListArea>
-          </HabilidadeArea>
+            </AreaFlatlist>
+          </ListArea>
         </PageBody>
       </Scroller>
     </Container>

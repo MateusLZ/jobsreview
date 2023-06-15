@@ -63,7 +63,8 @@ export const CustomButtonText = styled.Text`
 
 export const PageBody = styled.View`
   background-color: #ffffff;
-  min-height: 400px;
+  flex: 1;
+  flex-direction: column;
 `;
 
 export const DescriptionArea = styled.View``;
@@ -98,36 +99,81 @@ export const HabilidadeTitle = styled.Text`
   margin-left: 20px;
 `;
 
-export const AdicionarHabilidade = styled.TouchableOpacity`
+export const AdicionarVaga = styled.TouchableOpacity`
   margin-top: 20px;
   margin-right: 20px;
 `;
-export const Area = styled.TouchableOpacity`
-  width: 150px;
-  height: 50px;
-  background-color: #ffffff;
-  margin-bottom: 10px;
-`;
 
 export const ListArea = styled.View`
-  margin-top: 20px;
-  margin-left: 30px;
-  margin-right: 30px;
-`;
-export const InfoArea = styled.View`
   width: 100%;
+  min-height: 400px;
+  margin-top: 40px;
+  align-items: center;
+  flex-direction: column;
+`;
+
+export const TopList = styled.View`
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  margin-right: 20px;
+  margin-left: 20px;
+`;
+export const NomeVaga = styled.Text`
+  font-size: 17px;
+  font-weight: bold;
+  margin-left: 20px;
+`;
+export const DataCriado = styled.Text`
+  font-size: 17px;
+  font-weight: bold;
+`;
+export const StatusVaga = styled.Text`
+  font-size: 17px;
+  font-weight: bold;
+  margin-right: 20px;
+`;
+
+export const AreaFlatlist = styled.View`
+  width: 100%;
+`;
+
+export const InfoArea = styled.TouchableOpacity`
+  width: 100%;
+  height: 50px;
+  align-items: center;
+  border-radius: 5px;
+  margin-top: 15px;
+  justify-content: space-between;
+  flex-direction: row;
+  margin-bottom: 5px;
+  border-bottom-color: #000000;
+  border-bottom-width: 1px;
+`;
+export const NameArea = styled.View`
+  width: 33.3%;
+  align-items: center;
+`;
+export const DataArea = styled.View`
+  width: 33.3%;
+  align-items: center;
+`;
+export const StatusArea = styled.View`
+  width: 33.3%;
   align-items: center;
 `;
 export const UserName = styled.Text`
-  text-align: center;
-  width: 100%;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: bold;
 `;
 
 export const Tipo = styled.Text`
-  font-size: 13px;
-  color: #268596;
+  font-size: 15px;
+  font-weight: bold;
+`;
+export const Status = styled.Text`
+  font-size: 15px;
+  font-weight: bold;
 `;
 
 export const LoadingIcon = styled.ActivityIndicator`
@@ -135,3 +181,17 @@ export const LoadingIcon = styled.ActivityIndicator`
 `;
 
 export const JanelaModal = styled.Modal``;
+
+export const VerPerfilBotao = styled.View`
+  width: 85px;
+  height: 26px;
+  border: 1px solid #4eadbe;
+  border-radius: 10px;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const VerPerfilBotaoText = styled.Text`
+  font-size: 13px;
+  color: #268596;
+`;

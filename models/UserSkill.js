@@ -32,15 +32,6 @@ const UserSkill = connection.define("User_Skill", {
   },
 });
 
-// User.belongsToMany(Skill, {
-//   through: UserSkill,
-//   foreignKey: "userId",
-// });
-// Skill.belongsToMany(User, {
-//   through: UserSkill,
-//   foreignKey: "skillId",
-// });
-
 UserSkill.belongsTo(User, { foreignKey: "userId" });
 UserSkill.belongsTo(Skill, { foreignKey: "skillId" });
 

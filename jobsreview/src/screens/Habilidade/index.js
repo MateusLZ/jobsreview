@@ -1,5 +1,8 @@
+import React, { useContext, useState, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Context } from "../../context/dataContext";
+import { Picker } from "@react-native-picker/picker";
+import Stars from "react-native-stars";
 import {
   Container,
   BackButton,
@@ -15,40 +18,103 @@ import {
   StarView,
   CustomButton,
   CustomButtonText,
+  CadastroMensagem,
+  CustomButtonExcluir,
 } from "./styled";
 import { Ionicons, AntDesign, Entypo } from "@expo/vector-icons";
 import api from "../../api";
+import { useNavigation } from "@react-navigation/native";
 
-import React, { useContext, useState } from "react";
-import { Picker } from "@react-native-picker/picker";
-import Stars from "react-native-stars";
-
-const Pesquisa = ({ navigation }) => {
+const Habilidade = ({ route }) => {
   const { state, dispatch } = useContext(Context);
+  const [availableOptions, setAvailableOptions] = useState([]);
+  const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [type, setType] = useState("");
-  const [stars, setStars] = useState("");
+  const [stars, setStars] = useState(0);
+  const [showMessage, setShowMessage] = useState(false);
+  const [isEditing, setIsEditing] = useState(true);
+  const navigation = useNavigation();
 
+  useEffect(() => {
+    if (route && route.params) {
+      // Verifica se route e route.params estão definidos
+      EditarHabilidade();
+    } else {
+      listSkills();
+    }
+  }, [route]);
+
+  const EditarHabilidade = async () => {
+    try {
+      const { skill, stars } = route.params; // Obtém as informações da habilidade selecionada
+      setType(skill.name); // Define o tipo da habilidade no estado do componente
+      setStars(stars); // Define as estrelas no estado do componente
+      setIsEditing(false);
+      setShowDeleteButton(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const onRegisterPressed = async () => {
     try {
       // Fazer a requisição POST para comparar a habilidade
       const response = await api.post("/skill/compare", { nome: type });
       const { id } = response.data;
-
-      // Faça o que você deseja com o ID retornado (por exemplo, enviá-lo para a tabela de relacionamento)
-
       // Exemplo de como usar o ID:
       const userSkillResponse = await api.post("/userskill", {
         userId: state.idUser,
         skillId: id,
         stars: stars,
       });
+      dispatch({ type: "update", payload: true });
+      setShowMessage(true);
+      setTimeout(() => {
+        handleBackButton();
+        setShowMessage(false);
+      }, 500);
+      setType("");
     } catch (error) {
       console.error(error);
     }
   };
 
+  const listSkills = async () => {
+    try {
+      const response = await api.get("/skill/find");
+      const responsete = await api.get(`/userskill/user/${state.idUser}`);
+      const userSkillsUser = responsete.data.userSkills;
+      const skills = response.data.Skills; // Acesse a propriedade "Skills" da resposta
+
+      const userSkillIds = userSkillsUser.map((skill) => skill.skillId);
+      const availableOptionsFiltered = skills.filter(
+        (option) => !userSkillIds.includes(option.id)
+      );
+      setAvailableOptions(availableOptionsFiltered);
+      const nameSkillPicker = availableOptionsFiltered[0].name;
+      setType(nameSkillPicker);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleBackButton = () => {
     navigation.goBack();
+  };
+
+  const onDeletePressed = async () => {
+    const idSkill = route.params.id;
+    try {
+      const response = await api.delete(`/userskill/delete/${idSkill}`);
+      console.log(response.data); // Exibe a resposta do servidor (opcional)
+      // Faça qualquer ação adicional após a exclusão do item
+      dispatch({ type: "update", payload: true });
+
+      setTimeout(() => {
+        handleBackButton();
+      }, 500);
+    } catch (error) {
+      console.error(error);
+      // Trate o erro de acordo com sua lógica de manipulação de erros
+    }
   };
 
   return (
@@ -98,29 +164,38 @@ const Pesquisa = ({ navigation }) => {
         </HeaderInfo>
       </Header>
       <PageBody>
-        <BodyTitle>Escolha sua habilidade</BodyTitle>
+        <BodyTitle>
+          {isEditing ? "Escolha sua habilidade" : "Editar Skill"}
+        </BodyTitle>
         <PickerView>
           <Picker
-            selectedValue={type}
+            selectedValue={isEditing ? type : route.params.skill.name}
             style={styles.picker}
-            onValueChange={setType}
+            onValueChange={(value) => {
+              setType(value);
+            }}
+            enabled={isEditing}
           >
-            <Picker.Item label="Proatividade" value="Proatividade" />
-            <Picker.Item label="Liderança" value="Liderança" />
-            <Picker.Item label="Comunicação" value="Comunicação" />
-            <Picker.Item label="ReactJS" value="ReactJS" />
-            <Picker.Item label="JavaScript" value="JavaScript" />
-            <Picker.Item label="Css" value="Css" />
-            <Picker.Item label="Python" value="Python" />
-            <Picker.Item label="Html" value="Html" />
-            <Picker.Item label="C+" value="C+" />
-            <Picker.Item label="TypeScript" value="TypeScript" />
+            {!isEditing && (
+              <Picker.Item
+                label={route.params.skill.name}
+                value={route.params.skill.name}
+                key={route.params.skill.id}
+              />
+            )}
+            {availableOptions.map((option) => (
+              <Picker.Item
+                label={option.name}
+                value={option.name}
+                key={option.id}
+              />
+            ))}
           </Picker>
         </PickerView>
 
         <StarView>
           <Stars
-            default={0}
+            default={stars}
             update={(val) => {
               setStars(val);
             }}
@@ -136,8 +211,17 @@ const Pesquisa = ({ navigation }) => {
         </StarView>
 
         <CustomButton onPress={onRegisterPressed}>
-          <CustomButtonText>Enviar</CustomButtonText>
+          <CustomButtonText>{isEditing ? "Enviar" : "Editar"}</CustomButtonText>
         </CustomButton>
+
+        {showDeleteButton && (
+          <CustomButtonExcluir onPress={onDeletePressed} backgroundColor="red">
+            <CustomButtonText style={{ color: "#2658ab" }}>
+              Excluir
+            </CustomButtonText>
+          </CustomButtonExcluir>
+        )}
+        {showMessage && <CadastroMensagem>Cadastrado</CadastroMensagem>}
       </PageBody>
       <BackButton onPress={handleBackButton}>
         <Ionicons name="chevron-back" size={24} color="black" />
@@ -146,7 +230,7 @@ const Pesquisa = ({ navigation }) => {
   );
 };
 
-export default Pesquisa;
+export default Habilidade;
 
 const styles = StyleSheet.create({
   picker: {
@@ -155,12 +239,13 @@ const styles = StyleSheet.create({
     backgroundColor: "lightgray",
     textAlignVertical: "center",
     textAlign: "center",
-    fontSize: "14px",
+    fontSize: 14,
     fontWeight: "bold",
     borderWidth: 0,
     height: 45,
     width: "100%",
   },
+
   myStarStyle: {
     color: "yellow",
     backgroundColor: "transparent",

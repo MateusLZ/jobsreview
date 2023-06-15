@@ -13,6 +13,10 @@ const Vaga = connection.define("vaga", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  empresa: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
   type: {
     type: Sequelize.STRING,
     allowNull: false,

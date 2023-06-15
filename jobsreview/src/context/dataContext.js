@@ -6,6 +6,7 @@ let initialState = {
   isLogged: false,
   name: "",
   idUser: "",
+  typeLogin: false,
   update: false,
   idVaga: "",
   nameVaga: "",
@@ -13,7 +14,7 @@ let initialState = {
 
 const reducer = (state, action) => {
   switch (action.type) {
-    case "login":
+    case "logIn":
       return { ...state, isLogged: action.payload, Loading: false };
     case "logOut":
       AsyncStorage.removeItem("token");
@@ -21,6 +22,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         isLogged: false,
+        typeLogin: false,
       };
     case "verify":
       return {
@@ -28,6 +30,7 @@ const reducer = (state, action) => {
         isLogged: true,
         Loading: false,
         idUser: action.payload.id,
+        typeLogin: action.payload.tipo_login,
         name: action.payload.name,
       };
     case "setVaga":
