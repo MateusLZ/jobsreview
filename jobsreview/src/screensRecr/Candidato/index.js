@@ -27,18 +27,23 @@ import {
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import api from "../../api";
 import StarComponent from "../../components/StarComponent";
+import { Context } from "../../context/dataContext";
 
 const Candidato = ({ route, navigation, handleClose }) => {
   const [loading, setLoading] = useState(false);
   const [candInfo, setCandInfo] = useState("");
   const [list, setList] = useState([]);
-
+  const [typeLogin, setType] = useState(false);
+  const { state, dispatch } = useContext(Context);
+  const [idCand, setId] = useState("");
   useEffect(() => {
     const getCandInfo = async () => {
+      setType(state.typeLogin);
       setLoading(true);
       const cand = route.id;
       if (cand.id != "") {
         setCandInfo(route);
+        setId(cand);
       } else {
         alert("Erro");
       }
@@ -70,8 +75,17 @@ const Candidato = ({ route, navigation, handleClose }) => {
           <VagaInfoArea>
             <VagaIcon />
             <VagaInfor>
-              <VagaName>{candInfo.name}</VagaName>
-              <VagaType>{candInfo.type}</VagaType>
+              {typeLogin || candInfo.id === state.idUser ? (
+                <>
+                  <VagaName>{candInfo.name}</VagaName>
+                  <VagaType>{candInfo.tag}</VagaType>
+                </>
+              ) : (
+                <>
+                  <VagaName>Candidato</VagaName>
+                  <VagaType>{candInfo.tag}</VagaType>
+                </>
+              )}
             </VagaInfor>
             <VagaFavButton>
               <MaterialIcons name="favorite-border" size={24} color="red" />
@@ -102,8 +116,17 @@ const Candidato = ({ route, navigation, handleClose }) => {
           </InfoSkillArea>
 
           <DescriptionArea>
-            <DescriptionTitle>Sobre</DescriptionTitle>
-            <DescriptionText>{candInfo.description}</DescriptionText>
+            {typeLogin || candInfo.id === state.idUser ? (
+              <>
+                <DescriptionTitle>Sobre</DescriptionTitle>
+                <DescriptionText>{candInfo.description}</DescriptionText>
+              </>
+            ) : (
+              <>
+                <DescriptionTitle>Sobre</DescriptionTitle>
+                <DescriptionText>{}</DescriptionText>
+              </>
+            )}
           </DescriptionArea>
 
           <AplicationArea onPress={handleClose}></AplicationArea>

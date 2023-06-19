@@ -74,6 +74,8 @@ const Vaga = ({ route, navigation }) => {
     getVagaInfo();
   }, [handleApplyVaga]);
   const handleBackButton = () => {
+    dispatch({ type: "update", payload: true });
+
     navigation.goBack();
   };
 
@@ -81,6 +83,7 @@ const Vaga = ({ route, navigation }) => {
     try {
       const vagaId = route.params.id;
       const response = await api.get(`/candidatura/${vagaId}/${state.idUser}`);
+      console.log(response);
       const candidatura = response.data;
       if (candidatura) {
         setHasApplied(true);
@@ -106,9 +109,7 @@ const Vaga = ({ route, navigation }) => {
     }
   };
 
-  const UserArea = async () => {};
-
-  const RecrutadorArea = async () => {
+  const aplicationArea = async () => {
     navigation.navigate("Aplicacao", { vagaInfo: vagaInfo });
   };
   const handleApplyVaga = useCallback(async () => {
@@ -194,7 +195,7 @@ const Vaga = ({ route, navigation }) => {
               </CustomButtonText>
             </CustomButton>
             <CustomButton
-              onPress={canEditVaga ? RecrutadorArea : UserArea}
+              onPress={aplicationArea}
               style={{
                 backgroundColor: "#ffffff",
                 border: "1px solid",

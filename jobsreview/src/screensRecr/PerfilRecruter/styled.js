@@ -39,8 +39,6 @@ export const NomeUser = styled.Text`
   color: #000000;
 `;
 export const AplicationArea = styled.View`
-  flex-direction: row;
-  justify-content: space-around;
   align-items: center;
   width: 100%;
   flex: 1;
@@ -194,4 +192,11 @@ export const VerPerfilBotao = styled.View`
 export const VerPerfilBotaoText = styled.Text`
   font-size: 13px;
   color: #268596;
+`;
+
+export const BackButton = styled.TouchableOpacity`
+  position: absolute;
+  right: 5;
+  top: 5;
+  z-index: 9;
 `;

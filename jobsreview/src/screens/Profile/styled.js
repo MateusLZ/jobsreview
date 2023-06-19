@@ -12,7 +12,7 @@ export const Scroller = styled.ScrollView`
 
 export const Header = styled.View`
   background-color: #63c2d1;
-  height: 200px;
+  height: 220px;
   width: 100%;
   align-items: center;
   border-bottom-color: #cccccc;
@@ -135,3 +135,10 @@ export const LoadingIcon = styled.ActivityIndicator`
 `;
 
 export const JanelaModal = styled.Modal``;
+
+export const BackButton = styled.TouchableOpacity`
+  position: absolute;
+  right: 5;
+  top: 5;
+  z-index: 9;
+`;

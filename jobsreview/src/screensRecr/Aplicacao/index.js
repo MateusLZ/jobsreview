@@ -28,9 +28,8 @@ const Aplicacao = ({ navigation, route }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-
-  const { dispatch } = useContext(Context);
-
+  const [typeLogin, setType] = useState(false);
+  const { state, dispatch } = useContext(Context);
   const getCand = async () => {
     setLoading(true);
     const idVaga = route.params.vagaInfo.id;
@@ -55,6 +54,7 @@ const Aplicacao = ({ navigation, route }) => {
     navigation.goBack();
   };
   useEffect(() => {
+    setType(state.typeLogin);
     getCand();
   }, []);
 
@@ -65,9 +65,13 @@ const Aplicacao = ({ navigation, route }) => {
 
   const openModal = (item) => {
     setSelectedItem(item);
+
     setVisibleModal(true);
   };
 
+  const generateCandidateName = (index) => {
+    return `Candidato ${index + 1}`;
+  };
   return (
     <Container>
       <Scroller
@@ -84,17 +88,21 @@ const Aplicacao = ({ navigation, route }) => {
         <ListArea>
           <FlatList
             data={list}
-            renderItem={({ item }) => {
+            renderItem={({ item, index }) => {
+              const isCurrentUser = item.id === state.idUser;
+              let candidateName = isCurrentUser ? item.name : item.name;
+
+              if (!typeLogin && !isCurrentUser) {
+                candidateName = `Candidato ${index + 1}`;
+              }
               return (
                 <Area onPress={() => openModal(item)}>
                   <Icon>
                     <AntDesign name="iconfontdesktop" size={50} color="black" />
                   </Icon>
                   <InfoArea>
-                    <UserName>{item.name}</UserName>
-
-                    <Tipo>{item.description}</Tipo>
-
+                    <UserName>{candidateName}</UserName>
+                    <Tipo>{item.tag}</Tipo>
                     <VerPerfilBotao>
                       <VerPerfilBotaoText>Ver Perfil</VerPerfilBotaoText>
                     </VerPerfilBotao>
@@ -104,6 +112,7 @@ const Aplicacao = ({ navigation, route }) => {
             }}
             keyExtractor={(item) => item.id}
           />
+
           <JanelaModal
             visible={visibleModal}
             transparent={true}

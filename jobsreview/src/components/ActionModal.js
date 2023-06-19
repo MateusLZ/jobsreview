@@ -7,10 +7,11 @@ import { Button, TouchableOpacity } from "react-native";
 
 export function ActionModal({ handleClose, user }) {
   const { state, dispatch } = useContext(Context);
-
+  const [typeLogin, setType] = useState(false);
   const [novoNome, setNovoNome] = useState(user.name);
   const [novoEmail, setNovoEmail] = useState(user.email);
   const [novaDescricao, setNovaDescricao] = useState(user.description || "");
+  const [novaTag, setNovaTag] = useState(user.tag || "");
   const [showMessage, setShowMessage] = useState(false);
 
   const atualizarPerfil = async () => {
@@ -19,6 +20,7 @@ export function ActionModal({ handleClose, user }) {
         name: novoNome,
         email: novoEmail,
         description: novaDescricao,
+        tag: novaTag,
         id: state.idUser,
       });
       if (response.status === 200) {
@@ -91,6 +93,13 @@ export function ActionModal({ handleClose, user }) {
               onChangeText={(text) => setNovaDescricao(text)}
             />
           </InputAreaBio>
+          <InputAreaTag>
+            <TextAreaInput>Tag</TextAreaInput>
+            <InputName
+              value={novaTag}
+              onChangeText={(text) => setNovaTag(text)}
+            />
+          </InputAreaTag>
           {showMessage && <ErroMensagem>Email já existente</ErroMensagem>}
         </AreaInputsPerfil>
       </AreaConteudo>
@@ -114,6 +123,13 @@ const InputAreaEmail = styled.View`
 `;
 
 const InputAreaBio = styled.View`
+  margin-top: 15px;
+  width: 100%;
+  flex-direction: column;
+  border-bottom-width: 1px;
+  border-color: #ffffff;
+`;
+const InputAreaTag = styled.View`
   margin-top: 15px;
   width: 100%;
   flex-direction: column;

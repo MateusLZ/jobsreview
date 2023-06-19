@@ -27,8 +27,9 @@ import {
   UserName,
   LoadingIcon,
   JanelaModal,
+  BackButton,
 } from "./styled";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import api from "../../api";
 import StarComponent from "../../components/StarComponent";
 
@@ -89,6 +90,7 @@ const Profile = ({ navigation }) => {
           <FotoPerfil />
           <HeaderInfo>
             <NomeUser>{user.name}</NomeUser>
+            <CustomButtonText>{user.tag}</CustomButtonText>
             <AplicationArea>
               <CustomButton onPress={() => setVisibleModal(true)}>
                 <CustomButtonText>Editar perfil</CustomButtonText>
@@ -159,6 +161,10 @@ const Profile = ({ navigation }) => {
           </HabilidadeArea>
         </PageBody>
       </Scroller>
+
+      <BackButton onPress={() => dispatch({ type: "logOut" })}>
+        <Entypo name="log-out" size={24} color="black" />
+      </BackButton>
     </Container>
   );
 };

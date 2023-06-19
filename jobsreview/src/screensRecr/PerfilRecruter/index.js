@@ -34,8 +34,9 @@ import {
   NameArea,
   DataArea,
   StatusArea,
+  BackButton,
 } from "./styled";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Entypo } from "@expo/vector-icons";
 import api from "../../api";
 
 const Profile = ({ navigation }) => {
@@ -114,7 +115,7 @@ const Profile = ({ navigation }) => {
                   user={user}
                 />
               </JanelaModal>
-              <CustomButton
+              {/* <CustomButton
                 style={{
                   backgroundColor: "#ffffff",
                   border: "1px solid",
@@ -125,7 +126,7 @@ const Profile = ({ navigation }) => {
                 <CustomButtonText style={{ color: "#2658ab" }}>
                   Sair
                 </CustomButtonText>
-              </CustomButton>
+              </CustomButton> */}
             </AplicationArea>
           </HeaderInfo>
         </Header>
@@ -180,6 +181,9 @@ const Profile = ({ navigation }) => {
           </ListArea>
         </PageBody>
       </Scroller>
+      <BackButton onPress={() => dispatch({ type: "logOut" })}>
+        <Entypo name="log-out" size={24} color="black" />
+      </BackButton>
     </Container>
   );
 };

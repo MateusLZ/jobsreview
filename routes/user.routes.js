@@ -29,7 +29,7 @@ user.get("/", async (req, res) => {
 });
 
 user.post("/editar", async (req, res) => {
-  const { name, email, description, id } = req.body;
+  const { name, email, description, tag, id } = req.body;
   const photoId = req.file ? req.file.filename : null;
 
   // Verifique se o usuário já existe pelo ID
@@ -59,7 +59,7 @@ user.post("/editar", async (req, res) => {
   user.name = name;
   user.email = email;
   user.description = description;
-  user.photoId = photoId;
+  user.tag = tag;
 
   const updatedUser = await user.save().catch((err) => {
     console.log("Error: ", err);
@@ -106,7 +106,7 @@ user.get("/findByUser", async (req, res) => {
       where: {
         id: idUser,
       },
-      attributes: ["name", "description", "email", "id"],
+      attributes: ["name", "description", "email", "tag", "id"],
     });
 
     if (user) {

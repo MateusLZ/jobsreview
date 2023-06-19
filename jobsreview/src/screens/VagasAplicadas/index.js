@@ -93,7 +93,7 @@ const VagasAplicadas = ({ navigation, route }) => {
                   <InfoArea>
                     <UserName>{item.name}</UserName>
 
-                    <Tipo>{item.description}</Tipo>
+                    <Tipo>{` ${item.type}  |  ${item.address}`}</Tipo>
 
                     <VerPerfilBotao>
                       <VerPerfilBotaoText>Ver Perfil</VerPerfilBotaoText>

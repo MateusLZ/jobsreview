@@ -4,6 +4,7 @@ import Habilidade from "../Habilidade";
 import Profile from "./index";
 import VagasAplicadas from "../VagasAplicadas";
 import Vaga from "../Vaga";
+import Aplicacao from "../../screensRecr/Aplicacao";
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ const ProfileRoutes = ({ navigation }) => {
       <Stack.Screen name="Vaga" component={Vaga} />
       <Stack.Screen name="Habilidade" component={Habilidade} />
       <Stack.Screen name="VagasAplicada" component={VagasAplicadas} />
+      <Stack.Screen name="Aplicacao" component={Aplicacao} />
     </Stack.Navigator>
   );
 };

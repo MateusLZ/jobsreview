@@ -34,7 +34,10 @@ const TimeLine = ({ navigation }) => {
   const [loading, setLoading] = useState(false);
   const [list, setList] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const { dispatch } = useContext(Context);
+  const [appliedVagas, setAppliedVagas] = useState([]);
+  const [loadingComplete, setLoadingComplete] = useState(false);
+
+  const { state, dispatch } = useContext(Context);
 
   Geocoder.init("AIzaSyAyzbZ2Tphtadc13gq6MhBISoxXNXzR1_c");
 
@@ -50,7 +53,6 @@ const TimeLine = ({ navigation }) => {
       setLocationText("");
       Geolocation.getCurrentPosition((info) => {
         setCoords(info.coords);
-        getVagas();
         let lat = null;
         let lng = null;
         if (info) {
@@ -69,6 +71,12 @@ const TimeLine = ({ navigation }) => {
                     const city = addressComponents[j].long_name;
                     AsyncStorage.setItem("location", city);
                     setLocationText(city);
+
+                    // Verificar se vagas não está vazio antes de chamar checkIfApplied
+                    if (list.length > 0) {
+                      checkIfApplied(list);
+                    }
+
                     return;
                   }
                 }
@@ -81,24 +89,55 @@ const TimeLine = ({ navigation }) => {
       });
     }
   };
+
   const getVagas = async () => {
     setLoading(true);
 
     try {
       const res = await api.get("/vaga/find");
+
       const location = await AsyncStorage.getItem("location");
 
       if (res.error != "undefined") {
         if (location) {
           setLocationText(location);
         }
-        setList(res.data.Vagas);
+
+        const result = res.data.Vagas;
+        if (result) {
+          checkIfApplied(result);
+          setList(result);
+        }
       } else {
         console.log(`Error: ${res.error}`);
       }
     } catch (error) {
       console.log("Error occurred while fetching data:", error);
     }
+  };
+  const checkIfApplied = async (vagas) => {
+    try {
+      const filteredVagas = [];
+      for (const vaga of vagas) {
+        const response = await api.get(
+          `/candidatura/${vaga.id}/${state.idUser}`
+        );
+        const candidatura = response.data;
+        if (candidatura) {
+          setAppliedVagas((prevAppliedVagas) => [...prevAppliedVagas, vaga]);
+        }
+        if (candidatura.success === false) {
+          setAppliedVagas((prevAppliedVagas) =>
+            prevAppliedVagas.filter((appliedVaga) => appliedVaga.id !== vaga.id)
+          );
+          filteredVagas.push(vaga);
+        }
+      }
+      setList(filteredVagas);
+    } catch (error) {
+      console.error("Erro ao verificar candidatura:", error);
+    }
+    setLoadingComplete(true);
 
     setLoading(false);
   };
@@ -114,6 +153,9 @@ const TimeLine = ({ navigation }) => {
 
   const viewVaga = async (item) => {
     await dispatch({ type: "setVaga", payload: item });
+
+    // Adicionar a vaga aplicada ao estado appliedVagas
+    setAppliedVagas([...appliedVagas, item]);
 
     navigation.navigate("Vaga", item);
   };
@@ -146,28 +188,34 @@ const TimeLine = ({ navigation }) => {
         {loading && <LoadingIcon size="large" color="#FFF" />}
 
         <ListArea>
-          <FlatList
-            data={list}
-            renderItem={({ item }) => {
-              return (
-                <Area onPress={() => viewVaga(item)}>
-                  <Icon>
-                    <AntDesign name="iconfontdesktop" size={50} color="black" />
-                  </Icon>
-                  <InfoArea>
-                    <UserName>{item.name}</UserName>
+          {loadingComplete && ( // Verifica se o carregamento está completo antes de renderizar o componente
+            <FlatList
+              data={list}
+              renderItem={({ item }) => {
+                return (
+                  <Area onPress={() => viewVaga(item)}>
+                    <Icon>
+                      <AntDesign
+                        name="iconfontdesktop"
+                        size={50}
+                        color="black"
+                      />
+                    </Icon>
+                    <InfoArea>
+                      <UserName>{item.name}</UserName>
 
-                    <Tipo>{` ${item.type}  |  ${item.address}`}</Tipo>
+                      <Tipo>{` ${item.type}  |  ${item.address}`}</Tipo>
 
-                    <VerPerfilBotao>
-                      <VerPerfilBotaoText>Ver Vaga</VerPerfilBotaoText>
-                    </VerPerfilBotao>
-                  </InfoArea>
-                </Area>
-              );
-            }}
-            keyExtractor={(item) => item.id}
-          />
+                      <VerPerfilBotao>
+                        <VerPerfilBotaoText>Ver Vaga</VerPerfilBotaoText>
+                      </VerPerfilBotao>
+                    </InfoArea>
+                  </Area>
+                );
+              }}
+              keyExtractor={(item) => item.id}
+            />
+          )}
         </ListArea>
       </Scroller>
     </Container>

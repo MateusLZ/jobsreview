@@ -161,7 +161,7 @@ const HomeRecruter = ({ navigation }) => {
                   <InfoArea>
                     <UserName>{item.name}</UserName>
 
-                    <Tipo>{item.description}</Tipo>
+                    <Tipo>{item.tag}</Tipo>
 
                     <VerPerfilBotao>
                       <VerPerfilBotaoText>Ver Perfil</VerPerfilBotaoText>

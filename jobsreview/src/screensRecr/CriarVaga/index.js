@@ -48,7 +48,7 @@ import { ModalHabilidade } from "../../components/ModalHabilidade";
 
 const CriarVaga = ({ route }) => {
   const { state, dispatch } = useContext(Context);
-  const [type, setType] = useState("");
+  const [type, setType] = useState("Presencial");
   const [locationText, setLocationText] = useState("");
   const [coords, setCoords] = useState(null);
   const [list, setList] = useState([]);
@@ -134,6 +134,19 @@ const CriarVaga = ({ route }) => {
   };
 
   const RegistrarVaga = async () => {
+    console.log(type);
+
+    if (
+      modalTextValues.titulo.trim() === "" ||
+      modalTextValues.empresa.trim() === "" ||
+      modalTextValues.descricao.trim() === "" ||
+      locationText.trim() === "" ||
+      type.trim() === ""
+    ) {
+      alert("Todos os campos devem ser preenchidos.");
+      return;
+    }
+
     try {
       const vagaResponse = await api.post("/vaga/register", {
         name: modalTextValues.titulo,
@@ -222,7 +235,8 @@ const CriarVaga = ({ route }) => {
             <BotAreaClick>
               <LocationInput
                 value={locationText}
-                onChangeText={(t) => setLocationText(t)}
+                onChangeTex
+                t={(t) => setLocationText(t)}
               />
               <LocationFinder onPress={handleLocationfinder}>
                 <Entypo name="location-pin" size={24} color="black" />

@@ -90,7 +90,7 @@ export const LocationInput = styled.TextInput`
   flex: 1;
   font-size: 16px;
   width: 100%;
-  color: #ffffff;
+  color: #000;
 `;
 export const LocationFinder = styled.TouchableOpacity`
   width: 24px;

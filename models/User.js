@@ -34,6 +34,9 @@ const User = connection.define(
     description: {
       type: Sequelize.STRING,
     },
+    tag: {
+      type: Sequelize.STRING,
+    },
   },
   {
     hooks: {

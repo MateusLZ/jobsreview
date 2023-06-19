@@ -1,6 +1,7 @@
 import express from "express";
 import Vaga from "../models/Vaga.js";
 import Recrutador from "../models/Recrutador.js";
+import Candidatura from "../models/Candidatura.js";
 
 const vaga = express.Router();
 
@@ -95,6 +96,9 @@ vaga.delete("/:id", async (req, res) => {
     if (!vaga) {
       return res.status(404).json({ error: "Vaga not found" });
     }
+
+    // Excluir as candidaturas associadas à vaga
+    await Candidatura.destroy({ where: { idVaga: vaga.id } });
 
     // Excluir a vaga
     await vaga.destroy();

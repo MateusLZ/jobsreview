@@ -9,7 +9,7 @@ const Pesquisa = ({ navigation }) => {
 
   return (
     <View>
-      <TabItem onPress={() => dispatch({ type: "logOut" })}>
+      <TabItem>
         <Text>sair</Text>
       </TabItem>
     </View>
