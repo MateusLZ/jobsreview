@@ -31,13 +31,15 @@ export const VagaInfor = styled.View`
   flex: 1;
   justify-content: flex-end;
 `;
-export const VagaIcon = styled.Image`
+export const VagaIcon = styled.View`
   width: 110px;
   height: 110px;
   border-radius: 20px;
   margin-right: 30px;
   border-width: 4px;
   border-color: #ffffff;
+  align-items: center;
+  justify-content: center;
   background-color: gray;
 `;
 export const VagaName = styled.Text`

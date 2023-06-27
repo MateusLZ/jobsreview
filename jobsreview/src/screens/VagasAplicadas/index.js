@@ -18,7 +18,7 @@ import {
   Tipo,
   JanelaModal,
 } from "./styles";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import api from "../../api";
 import CandidatoModal from "../../screensRecr/Candidato";
 
@@ -36,7 +36,6 @@ const VagasAplicadas = ({ navigation, route }) => {
     try {
       const res = await api.get(`/candidatura/${idUser}/aplication`);
       const candidaturas = res.data;
-      console.log(candidaturas);
       const usersPromises = candidaturas.map(async (candidatura) => {
         const res = await api.get(`/vaga/findByVaga?id=${candidatura.idVaga}`);
         return res.data.vagas;
@@ -88,7 +87,7 @@ const VagasAplicadas = ({ navigation, route }) => {
               return (
                 <Area onPress={() => viewVaga(item)}>
                   <Icon>
-                    <AntDesign name="iconfontdesktop" size={50} color="black" />
+                    <Entypo name="briefcase" size={50} color="black" />
                   </Icon>
                   <InfoArea>
                     <UserName>{item.name}</UserName>

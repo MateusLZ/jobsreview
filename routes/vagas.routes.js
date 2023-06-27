@@ -9,8 +9,33 @@ vaga.get("/", (req, res) => {
   res.send("Rota de Vagas");
 });
 
+vaga.post("/editar", async (req, res) => {
+  const { status, id } = req.body;
+
+  const vaga = await Vaga.findOne({ where: { id } }).catch((err) =>
+    console.log("Error: ", err)
+  );
+
+  if (!vaga) {
+    return res.status(404).json({ error: "Vaga não encontrada." });
+  }
+
+  vaga.status = status;
+
+  const updatedVaga = await vaga.save().catch((err) => {
+    console.log("Error: ", err);
+    res.status(500).json({ error: "Não foi possível atualizar a vaga." });
+  });
+
+  if (updatedVaga) {
+    console.log(updatedVaga);
+    res.json({ message: "Vaga atualizada com sucesso!" });
+  }
+});
+
 vaga.post("/register", async (req, res) => {
-  const { name, type, description, address, recrutadorId, empresa } = req.body;
+  const { name, type, description, address, recrutadorId, empresa, status } =
+    req.body;
 
   try {
     const newVaga = new Vaga({
@@ -20,6 +45,7 @@ vaga.post("/register", async (req, res) => {
       address,
       recrutadorId,
       empresa,
+      status,
     });
     const savedVaga = await newVaga.save();
 

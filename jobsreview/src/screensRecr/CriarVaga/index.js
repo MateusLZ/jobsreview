@@ -155,6 +155,7 @@ const CriarVaga = ({ route }) => {
         description: modalTextValues.descricao,
         address: locationText,
         recrutadorId: state.idUser,
+        status: true,
       });
 
       const vagaId = vagaResponse.data.id;

@@ -48,7 +48,9 @@ export default ({ state, navigation, showCustomTabBar }) => {
     routeName === "Vaga" ||
     routeName === "Habilidade" ||
     routeName === "Candidato" ||
-    routeName === "NewVaga"
+    routeName === "NewVaga" ||
+    routeName === "Aplicacao" ||
+    routeName === "VagasAplicada"
   ) {
     return null;
   }

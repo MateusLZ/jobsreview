@@ -115,18 +115,6 @@ const Profile = ({ navigation }) => {
                   user={user}
                 />
               </JanelaModal>
-              {/* <CustomButton
-                style={{
-                  backgroundColor: "#ffffff",
-                  border: "1px solid",
-                  borderColor: "#2658ab",
-                }}
-                onPress={() => dispatch({ type: "logOut" })}
-              >
-                <CustomButtonText style={{ color: "#2658ab" }}>
-                  Sair
-                </CustomButtonText>
-              </CustomButton> */}
             </AplicationArea>
           </HeaderInfo>
         </Header>
@@ -170,7 +158,7 @@ const Profile = ({ navigation }) => {
                       </DataArea>
 
                       <StatusArea>
-                        <Status>OK</Status>
+                        <Status>{item.status ? "Aberta" : "Fechada"}</Status>
                       </StatusArea>
                     </InfoArea>
                   );

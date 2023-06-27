@@ -18,7 +18,7 @@ export const Header = styled.View`
   border-bottom-color: #cccccc;
   border-bottom-width: 5px;
 `;
-export const FotoPerfil = styled.Image`
+export const FotoPerfil = styled.View`
   margin-top: 30px;
   width: 80px;
   height: 80px;
@@ -26,6 +26,8 @@ export const FotoPerfil = styled.Image`
   border-width: 4px;
   border-color: #ffffff;
   background-color: gray;
+  align-items: center;
+  justify-content: center;
 `;
 export const HeaderInfo = styled.View`
   flex: 1;

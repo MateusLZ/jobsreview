@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useCallback } from "react";
-import { View, FlatList, StyleSheet } from "react-native";
+import { View, FlatList, Modal } from "react-native";
 import {
   Container,
   BackButton,
@@ -31,17 +31,22 @@ import {
   LocalizacaoTitle,
   SobreArea,
   SubDescriptionTitle,
+  VagaStatsText,
+  VagaStatsText2,
 } from "./styles";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import api from "../../api";
 import StarComponent from "../../components/StarComponent";
 import { Context } from "../../context/dataContext";
+import { ModalStatus } from "../../components/ModalStatus.js";
+
 const Vaga = ({ route, navigation }) => {
   const [loading, setLoading] = useState(false);
   const [vagaInfo, setvagaInfo] = useState("");
   const [list, setList] = useState([]);
   const { state, dispatch } = useContext(Context);
   const [hasApplied, setHasApplied] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const getVagaSkills = async () => {
     setLoading(true);
@@ -63,6 +68,7 @@ const Vaga = ({ route, navigation }) => {
         setvagaInfo(route.params);
 
         getVagaSkills(); // Chame a função para buscar as habilidades da vaga
+        dispatch({ type: "update", payload: false });
       } else {
         alert("Erro");
       }
@@ -72,7 +78,7 @@ const Vaga = ({ route, navigation }) => {
       }
     };
     getVagaInfo();
-  }, [handleApplyVaga]);
+  }, [handleApplyVaga, state.update]);
   const handleBackButton = () => {
     dispatch({ type: "update", payload: true });
 
@@ -83,7 +89,6 @@ const Vaga = ({ route, navigation }) => {
     try {
       const vagaId = route.params.id;
       const response = await api.get(`/candidatura/${vagaId}/${state.idUser}`);
-      console.log(response);
       const candidatura = response.data;
       if (candidatura) {
         setHasApplied(true);
@@ -125,6 +130,11 @@ const Vaga = ({ route, navigation }) => {
     }
   }, [state.idUser, vagaInfo.id]);
 
+  const handleModalOpen = () => {
+    setIsModalVisible(true);
+  };
+
+  const statusVaga = vagaInfo.status;
   const canEditVaga = state.typeLogin && vagaInfo.recrutadorId === state.idUser;
   return (
     <Container>
@@ -137,8 +147,14 @@ const Vaga = ({ route, navigation }) => {
               <VagaName>{vagaInfo.name}</VagaName>
               <VagaType>{vagaInfo.address}</VagaType>
             </VagaInfor>
-            <VagaFavButton>
-              <MaterialIcons name="favorite-border" size={24} color="red" />
+            <VagaFavButton
+              onPress={canEditVaga ? handleModalOpen : null}
+              disabled={!canEditVaga}
+            >
+              <VagaStatsText>Status</VagaStatsText>
+              <VagaStatsText2>
+                {statusVaga ? "Aberta" : "Fechada"}
+              </VagaStatsText2>
             </VagaFavButton>
           </VagaInfoArea>
           {loading && <LoadingIcon size="large" color="#000000" />}
@@ -186,9 +202,11 @@ const Vaga = ({ route, navigation }) => {
 
           <AplicationArea>
             <CustomButton
-              style={hasApplied ? disabledButtonStyle : null}
               onPress={canEditVaga ? handleEditVaga : handleApplyVaga}
-              disabled={hasApplied}
+              disabled={!vagaInfo.status || hasApplied}
+              style={
+                hasApplied || !vagaInfo.status ? disabledButtonStyle : null
+              }
             >
               <CustomButtonText>
                 {canEditVaga ? "Excluir" : "Aplicar"}
@@ -208,6 +226,19 @@ const Vaga = ({ route, navigation }) => {
             </CustomButton>
           </AplicationArea>
         </PageBody>
+        <Modal
+          visible={isModalVisible}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setIsModalVisible(false)}
+        >
+          <ModalStatus
+            handleClose={() => {
+              setIsModalVisible(false);
+            }}
+            vaga={vagaInfo}
+          />
+        </Modal>
       </Scroller>
       <BackButton onPress={handleBackButton}>
         <Ionicons name="chevron-back" size={24} color="black" />

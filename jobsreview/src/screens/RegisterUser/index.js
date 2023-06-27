@@ -49,8 +49,6 @@ const RegisterUser = ({ navigation }) => {
             tipo_login: typeLogin,
           });
           if (data.status === 200) {
-            console.log(data);
-            alert(data.data.message);
             navigation.navigate("Login");
           } else {
             console.log(data);

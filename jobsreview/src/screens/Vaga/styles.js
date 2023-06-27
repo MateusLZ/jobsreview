@@ -51,17 +51,21 @@ export const VagaType = styled.Text`
   font-size: 15px;
 `;
 export const VagaFavButton = styled.TouchableOpacity`
-  width: 40px;
-  height: 40px;
-  background-color: #ffffff;
-  border: 2px solid #999999;
-  border-radius: 20px;
+  width: 70px;
+  height: 70px;
+  /* background-color: blue; */
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 40px;
   margin-left: 20px;
   margin-right: 20px;
 `;
+export const VagaStatsText = styled.Text`
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+`;
+export const VagaStatsText2 = styled.Text``;
 
 export const InfoSkillArea = styled.View`
   border-top-color: #cccccc;

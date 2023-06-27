@@ -18,7 +18,7 @@ import {
   Tipo,
   JanelaModal,
 } from "./styles";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { Entypo, Ionicons } from "@expo/vector-icons";
 import api from "../../api";
 import CandidatoModal from "../Candidato";
 
@@ -98,7 +98,7 @@ const Aplicacao = ({ navigation, route }) => {
               return (
                 <Area onPress={() => openModal(item)}>
                   <Icon>
-                    <AntDesign name="iconfontdesktop" size={50} color="black" />
+                    <Entypo name="user" size={50} color="black" />
                   </Icon>
                   <InfoArea>
                     <UserName>{candidateName}</UserName>

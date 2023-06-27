@@ -29,6 +29,10 @@ const Vaga = connection.define("vaga", {
     type: Sequelize.STRING,
     allowNull: false,
   },
+  status: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+  },
   recrutadorId: {
     type: Sequelize.INTEGER,
     allowNull: false,

@@ -24,7 +24,7 @@ import {
   DescriptionText,
   AplicationArea,
 } from "./styles";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, Entypo } from "@expo/vector-icons";
 import api from "../../api";
 import StarComponent from "../../components/StarComponent";
 import { Context } from "../../context/dataContext";
@@ -73,7 +73,9 @@ const Candidato = ({ route, navigation, handleClose }) => {
         <Header></Header>
         <PageBody>
           <VagaInfoArea>
-            <VagaIcon />
+            <VagaIcon>
+              <Entypo name="user" size={65} color="black" />
+            </VagaIcon>
             <VagaInfor>
               {typeLogin || candInfo.id === state.idUser ? (
                 <>

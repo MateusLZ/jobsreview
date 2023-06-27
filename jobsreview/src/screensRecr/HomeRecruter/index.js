@@ -156,7 +156,7 @@ const HomeRecruter = ({ navigation }) => {
               return (
                 <Area onPress={() => openModal(item)}>
                   <Icon>
-                    <AntDesign name="iconfontdesktop" size={50} color="black" />
+                    <Entypo name="user" size={50} color="black" />
                   </Icon>
                   <InfoArea>
                     <UserName>{item.name}</UserName>

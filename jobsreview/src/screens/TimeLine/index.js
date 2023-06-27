@@ -195,11 +195,7 @@ const TimeLine = ({ navigation }) => {
                 return (
                   <Area onPress={() => viewVaga(item)}>
                     <Icon>
-                      <AntDesign
-                        name="iconfontdesktop"
-                        size={50}
-                        color="black"
-                      />
+                      <Entypo name="briefcase" size={50} color="black" />
                     </Icon>
                     <InfoArea>
                       <UserName>{item.name}</UserName>

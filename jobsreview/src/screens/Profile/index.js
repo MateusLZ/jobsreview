@@ -87,7 +87,9 @@ const Profile = ({ navigation }) => {
     <Container>
       <Scroller>
         <Header>
-          <FotoPerfil />
+          <FotoPerfil>
+            <Entypo name="user" size={45} color="black" />
+          </FotoPerfil>
           <HeaderInfo>
             <NomeUser>{user.name}</NomeUser>
             <CustomButtonText>{user.tag}</CustomButtonText>
